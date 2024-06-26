@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\JabatanController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -90,6 +91,6 @@ Route::post('/jabatan-view', [JabatanController::class, 'store'])->name('jabatan
 Route::get('/jabatan-view/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
 Route::put('/jabatan-view/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
 Route::delete('/jabatan-view/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
-
+Route::get('/get-unapproved-users', [UserController::class, 'getUnapprovedUsers'])->name('get-unapproved-users');
 
 
