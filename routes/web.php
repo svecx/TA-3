@@ -8,6 +8,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CreateUser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\KategoriDokumenController;
+use App\Http\Controllers\JabatanController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -82,7 +84,12 @@ Route::post('/kategori-dokumen-view', [KategoriDokumenController::class, 'store'
 Route::get('/kategori-dokumen-view/{id}/edit', [KategoriDokumenController::class, 'edit'])->name('kategori-dokumen.edit');
 Route::put('/kategori-dokumen-view/{id}', [KategoriDokumenController::class, 'update'])->name('kategori-dokumen.update');
 Route::delete('/kategori-dokumen-view/{id}', [KategoriDokumenController::class, 'destroy'])->name('kategori-dokumen.destroy');
-
+Route::get('/jabatan', [JabatanController::class, 'getJabatan'])->name('jabatan');
+Route::get('/jabatan-view', [JabatanController::class, 'index'])->name('jabatan.index');
+Route::post('/jabatan-view', [JabatanController::class, 'store'])->name('jabatan.store');
+Route::get('/jabatan-view/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
+Route::put('/jabatan-view/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
+Route::delete('/jabatan-view/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
 
 
 
