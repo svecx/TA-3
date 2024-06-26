@@ -11,4 +11,6 @@ class KategoriDokumen extends Model
     protected $fillable = [
         'nama_dokumen',
     ];
+
+    public $timestamps = false; // Disable timestamps
 }
