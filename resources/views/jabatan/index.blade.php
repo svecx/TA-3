@@ -10,14 +10,14 @@
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-dokumen-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Dokumen Saya</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('draft-dokumen') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Deleted Dokumen</a>
             @if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
-                <a class="nav-link active" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
-                <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Jabatan</a>
+                <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
+                <a class="nav-link active" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Jabatan</a>
                 <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List User</a>
             @endif
         </div>
         <div class="tab-content" id="v-pills-tabContent" style="margin-left: 150px; width: calc(100% - 150px);">
             <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                <h3 class="judul">List Kategori Dokumen</h3>
+                <h3 class="judul">List Jabatan</h3>
                 <div class="container-fluid mt-5">
                     @if(session('success'))
                         <div class="alert alert-success">
@@ -25,24 +25,24 @@
                         </div>
                     @endif
 
-                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Kategori Dokumen</button>
+                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Tambah Jabatan</button>
 
                     <table class="table table-striped table-bordered table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Nama Dokumen</th>
+                                <th>Nama Jabatan</th>
                                 <th style="width: 10.5rem;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($kategoriDokumen as $kategori)
+                            @foreach($jabatan as $item)
                                 <tr>
-                                    <td>{{ $kategori->id }}</td>
-                                    <td>{{ $kategori->nama_dokumen }}</td>
+                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $item->nama_jabatan }}</td>
                                     <td>
-                                        <a href="{{ route('kategori-dokumen.edit', $kategori->id) }}" class="btn btn-warning">Edit</a>
-                                        <form action="{{ route('kategori-dokumen.destroy', $kategori->id) }}" method="POST" style="display:inline-block;">
+                                        <a href="{{ route('jabatan.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+                                        <form action="{{ route('jabatan.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Delete</button>
@@ -57,17 +57,17 @@
                 <!-- Modal for Adding Category -->
                 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <form action="{{ route('kategori-dokumen.store') }}" method="POST">
+                        <form action="{{ route('jabatan.store') }}" method="POST">
                             @csrf
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="addModalLabel">Tambah Kategori Dokumen</h5>
+                                    <h5 class="modal-title" id="addModalLabel">Tambah Jabatan</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="nama_dokumen" class="form-label">Nama Dokumen</label>
-                                        <input type="text" class="form-control" id="nama_dokumen" name="nama_dokumen" required>
+                                        <label for="nama_jabatan" class="form-label">Nama Jabatan</label>
+                                        <input type="text" class="form-control" id="nama_jabatan" name="nama_jabatan" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

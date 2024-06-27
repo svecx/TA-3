@@ -198,4 +198,15 @@ class DokumenController extends Controller
 
         return view('history', compact('dokumen', 'histories'));
     }
+
+    public function index()
+    {
+        $user = Auth::user();
+        $jabatan = $user->jabatan;
+
+        // Dapatkan semua dokumen yang sesuai dengan jabatan user yang login
+        $documents = Dokumen::where('view', 'like', "%{$jabatan}%")->get();
+
+        return view('list-dokumen', compact('documents'));
+    }
 }

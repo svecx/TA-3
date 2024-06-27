@@ -64,7 +64,7 @@
                         <div class="row mb-3">
                             <label for="jabatan" class="col-md-4 col-form-label text-md-end">Jabatan:</label>
                             <div class="col-md-6">
-                                <select name="jabatan" id="jabatan" class="form-control" required>
+                                <!-- <select name="jabatan" id="jabatan" class="form-control" required>
                                     <option value="Kajur">Ketua Jurusan</option>
                                     <option value="Sekjur">Sekretaris Jurusan</option>
                                     <option value="Kaprodi">Kaprodi</option>
@@ -72,7 +72,10 @@
                                     <option value="Adm">Adm</option>
                                     <option value="Mahasiswa">Mahasiswa</option>
                                     <option value="Admin">Admin</option>
-                                </select>
+                                </select> -->
+                                <select name="jabatan" id="jabatanSelect" class="form-control" required>
+    <option value="">Memuat...</option>
+</select>
                             </div>
                         </div>
 
@@ -90,4 +93,26 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('{{ route('jabatan') }}')
+        .then(response => response.json())
+        .then(data => {
+            const jabatanSelect = document.getElementById('jabatanSelect');
+            jabatanSelect.innerHTML = '<option value="">Pilih Jabatan</option>'; // Reset options
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.nama_jabatan;
+                option.textContent = item.nama_jabatan;
+                jabatanSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching jabatan:', error);
+            const jabatanSelect = document.getElementById('jabatanSelect');
+            jabatanSelect.innerHTML = '<option value="">Error memuat data</option>';
+        });
+});
+</script>
 @endsection

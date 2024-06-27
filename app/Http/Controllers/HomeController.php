@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Dokumen;
 use Illuminate\Http\Request;
-
 
 class HomeController extends Controller
 {
@@ -14,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth'); // Ensure authentication is required for this controller
     }
 
     /**
@@ -24,9 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-         // Hitung jumlah dokumen yang sudah diinputkan
-         $documentCount = Dokumen::count();
+        // Count the number of documents
+        $documentCount = Dokumen::count();
 
-         return view('home', compact('documentCount'));
+        return view('home', compact('documentCount'));
     }
 }
+

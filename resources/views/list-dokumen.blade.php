@@ -11,6 +11,7 @@
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('draft-dokumen') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Deleted Dokumen</a>
             @if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Jabatan</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List User</a>
     @endif
         </div>
@@ -66,13 +67,17 @@
             <th scope="col" style="width: 5rem;">Tahun</th>
             <th scope="col">File</th>
             <th scope="col">Tags</th>
-            <th scope="col" style="width: 7.5rem;">Aksi</th>
             <th scope="col" style="width: 7.5rem;">View</th>
         </tr>
     </thead>
     <tbody id="documentTableBody">
-        @php $no = 1; @endphp
-        @foreach($documents as $index => $document)
+    @php $no = 1; @endphp
+    @foreach($documents as $index => $document)
+        @php
+            $views = explode(',', $document->view); // Mengubah string 'view' menjadi array
+            $userJabatan = auth()->user()->jabatan;
+        @endphp
+        @if(in_array($userJabatan, $views))
             @if(auth()->user()->jabatan === 'Mahasiswa' || auth()->user()->jabatan === 'Adm')
                 @if($document->kategori_dokumen === 'Dokumen Pendidikan')
                     <tr data-category="{{ $document->kategori_dokumen }}">
@@ -89,9 +94,7 @@
                             </a>
                         </td>
                         <td>{{ $document->tags }}</td>
-                        <td>
-                        {{ $document->tags }}
-                        </td>
+                        <td>{{ $document->view }}</td>
                     </tr>
                 @endif
             @elseif(auth()->user()->jabatan === 'Dosen')
@@ -110,9 +113,7 @@
                             </a>
                         </td>
                         <td>{{ $document->tags }}</td>
-                        <td>
-                        {{ $document->tags }}
-                        </td>
+                        <td>{{ $document->view }}</td>
                     </tr>
                 @endif
             @else
@@ -131,20 +132,22 @@
                     </td>
                     <td>{{ $document->tags }}</td>
                     <td>
-                    <a href="{{ asset('storage/documents/' . $document->dokumen_file) }}" class="btn btn-link p-0" style="display: inline-block;margin-right: 0.3rem" download>
-                        <i class="fa fa-download"></i>
-                    </a>
-                    <a href="{{ route('dokumen.history', $document->id) }}" class="btn btn-link p-0" style="display: inline-block;margin-right: 0.3rem">
-                        <i class="fa fa-history" aria-hidden="true" style="color: blue;"></i>
-                    </a>
-                </td>
-                    <td>
-                    {{ $document->view }}
+                        <a href="{{ asset('storage/documents/' . $document->dokumen_file) }}" class="btn btn-link p-0" style="display: inline-block; margin-right: 0.3rem" download>
+                            <i class="fa fa-download"></i>
+                        </a>
+                        <a href="{{ route('dokumen.history', $document->id) }}" class="btn btn-link p-0" style="display: inline-block; margin-right: 0.3rem">
+                            <i class="fa fa-history" aria-hidden="true" style="color: blue;"></i>
+                        </a>
                     </td>
+                    <td>{{ $document->view }}</td>
                 </tr>
             @endif
-        @endforeach
-    </tbody>
+        @endif
+    @endforeach
+</tbody>
+
+
+
 </table>
 
         </div>
