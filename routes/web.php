@@ -9,6 +9,8 @@ use App\Http\Controllers\CreateUser;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\ValidasiController;
+
 
 
 /*
@@ -92,5 +94,13 @@ Route::get('/jabatan-view/{id}/edit', [JabatanController::class, 'edit'])->name(
 Route::put('/jabatan-view/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
 Route::delete('/jabatan-view/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
 Route::get('/get-unapproved-users', [UserController::class, 'getUnapprovedUsers'])->name('get-unapproved-users');
+Route::get('/input-dokumen', [JabatanController::class, 'create'])->name('input-dokumen');
+Route::get('/validasi', [ValidasiController::class, 'index'])->name('validasi.index');
+Route::get('/validasi/create', [ValidasiController::class, 'create'])->name('validasi.create');
+Route::post('/validasi/store', [ValidasiController::class, 'store'])->name('validasi.store');
+Route::get('/validasi/edit/{id}', [ValidasiController::class, 'edit'])->name('validasi.edit');
+Route::post('/validasi/update/{id}', [ValidasiController::class, 'update'])->name('validasi.update');
+Route::delete('/validasi/destroy/{id}', [ValidasiController::class, 'destroy'])->name('validasi.destroy');
+Route::get('/get-validasi-dokumen', [ValidasiController::class, 'getValidasiDokumen'])->name('get-validasi-dokumen');
 
 
