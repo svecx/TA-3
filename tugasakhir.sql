@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 28, 2024 at 12:24 AM
+-- Generation Time: Jun 28, 2024 at 01:40 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,7 +67,8 @@ INSERT INTO `dokumens` (`id`, `created_by`, `judul_dokumen`, `deskripsi_dokumen`
 (96, 'Admin', 'Dokumen Iuran', 'Dokumen berisi iuran', 'Dokumen Iuran', 'Admin', '2023', 'Dokumen Iuran.pdf', 'Iuran', 'mahasiswa', 'active', '2024-06-16 21:02:24', '2024-06-27 06:03:59'),
 (105, 'Kaprodi', 'Dokumen Contoh', 'sa', 'Dokumen Capaian Tridarma', 'Ketua Jurusan', '2011', '/storage/uploads/1719071746_DAFTAR PUSTAKA.pdf', 'dfsa', 'mahasiswa', 'active', '2024-06-22 08:55:46', '2024-06-27 06:03:59'),
 (108, 'Kaprodi', 'contoh 2', 'contoh dokumen', 'Dokumen Pendidikan', 'Direktur', '2021', 'LISTING_PROGRAM.pdf', 'Contoh', 'all,kajur,sekjur,kaprodi,dosen,adm,mahasiswa', 'active', '2024-06-27 02:31:02', '2024-06-27 02:31:02'),
-(109, 'Dosen', 'Dokumen Contoh', 'contoh dokumen', 'Dokumen Pendidikan', 'Direktur', '2021', 'DAFTAR_PUSTAKA.pdf', 'Contoh', 'Kaprodi,Dosen', 'active', '2024-06-27 07:48:30', '2024-06-27 15:00:20');
+(109, 'Dosen', 'Dokumen Contoh', 'contoh dokumen', 'Dokumen Pendidikan', 'Direktur', '2021', 'DAFTAR_PUSTAKA.pdf', 'Contoh', 'Kaprodi,Dosen', 'active', '2024-06-27 07:48:30', '2024-06-27 15:00:20'),
+(110, 'Dosen', 'Dokumen Contoh zxcv', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Program Studi', '2021', 'OUTPUT_PROGRAM.pdf', 'contoh', 'Ketua Jurusan,Sekretaris Jurusan,Dosen', 'active', '2024-06-27 16:35:04', '2024-06-27 16:35:04');
 
 -- --------------------------------------------------------
 
@@ -142,7 +143,8 @@ INSERT INTO `jabatan` (`id`, `nama_jabatan`, `created_at`) VALUES
 (24, 'Adm', '2024-06-26 15:50:10'),
 (25, 'Mahasiswa', '2024-06-26 15:50:10'),
 (26, 'Admin', '2024-06-26 15:50:10'),
-(27, 'contoh 1', '2024-06-26 21:03:48');
+(27, 'contoh 1', '2024-06-26 21:03:48'),
+(29, 'contoh 3', '2024-06-27 22:29:18');
 
 -- --------------------------------------------------------
 
@@ -214,6 +216,27 @@ INSERT INTO `users` (`id`, `name`, `email`, `approved`, `password`, `jabatan`, `
 (24, 'sismul', 'sismul@example.com', 1, '$2y$12$zfsjoX3LwnLATHlWoZK9eexfPkMaYnP/xksBV1UFb8OlgHTLeTBLW', 'Dosen', '2024-06-20 12:49:09', '2024-06-20 12:49:38'),
 (25, '56419075', 'Widyfitriyanti@gmail.com', 1, '$2y$12$4RYjfNOf0QVmeI045DZV/uBGk800OJF.agELSUGhsZBU1JMm9lJSW', 'contoh 1', '2024-06-26 14:19:58', '2024-06-26 14:20:53');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `validasi`
+--
+
+CREATE TABLE `validasi` (
+  `id` int(11) NOT NULL,
+  `nama_validasi` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `validasi`
+--
+
+INSERT INTO `validasi` (`id`, `nama_validasi`, `created_at`) VALUES
+(30, 'Ketua Jurusan', '2024-06-27 23:04:53'),
+(31, 'Ketua Program Studi', '2024-06-27 23:04:53'),
+(32, 'Kelompok Bidang Keahlian', '2024-06-27 23:04:53');
+
 --
 -- Indexes for dumped tables
 --
@@ -259,6 +282,13 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
+-- Indexes for table `validasi`
+--
+ALTER TABLE `validasi`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nama_validasi` (`nama_validasi`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -266,7 +296,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `dokumens`
 --
 ALTER TABLE `dokumens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT for table `draft`
@@ -284,7 +314,7 @@ ALTER TABLE `histories`
 -- AUTO_INCREMENT for table `jabatan`
 --
 ALTER TABLE `jabatan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `kategori_dokumen`
@@ -297,6 +327,12 @@ ALTER TABLE `kategori_dokumen`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `validasi`
+--
+ALTER TABLE `validasi`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- Constraints for dumped tables
