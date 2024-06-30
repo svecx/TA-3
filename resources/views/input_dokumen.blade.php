@@ -10,9 +10,9 @@
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-dokumen-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Dokumen Saya</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('draft-dokumen') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Deleted Dokumen</a>
             @if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
-                <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
-                <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Jabatan</a>
-                <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List User</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Jabatan</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List User</a>
             @endif
         </div>
         <div class="tab-content" id="v-pills-tabContent">
@@ -21,10 +21,10 @@
                 <form action="{{ route('simpan-dokumen') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     @endif
                     <div>
                         <img src="{{ asset('images/gambar2.png') }}" alt="gambar" style="position:absolute; top:7%; left:600px; opacity:0.2; max-width: 110%; height: 600px">
@@ -46,20 +46,33 @@
                     </div>
 
                     <div style="margin-left:200px; margin-top:10px">
-    <label>Validasi Dokumen:</label>
-    <select name="validasi_dokumen" id="validasiDokumen" class="form-control" required>
-        <option value="">Memuat...</option>
-    </select>
-</div>
+                        <label>Validasi Dokumen:</label>
+                        <select name="validasi_dokumen" id="validasiDokumen" class="form-control" required>
+                            <option value="">Memuat...</option>
+                        </select>
+                    </div>
 
                     <div>
                         <label for="tahunDokumen" class="form-label">Tahun Dokumen:</label>
                         <input type="number" class="form-control" name="tahun_dokumen" id="tahunDokumen" style="margin-left:200px; position:relative; z-index: 1;" min="1900" max="2100" required>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="formFile" class="form-label">Input File Dokumen:</label>
-                        <input class="form-control" type="file" id="formFile" name="dokumen_file" style="margin-left:200px" required>
+                    <div style="margin-left:200px; margin-top:10px">
+                        <label for="inputType">Tipe Dokumen:</label>
+                        <select id="inputType" class="form-select" name="inputType" required>
+                            <option value="file" {{ old('inputType', $inputType) === 'file' ? 'selected' : '' }}>File</option>
+                            <option value="link" {{ old('inputType', $inputType) === 'link' ? 'selected' : '' }}>Link</option>
+                        </select>
+                    </div>
+
+                    <div id="fileInput" class="mb-3" style="margin-left:200px; margin-top:10px" style="{{ old('inputType', $inputType) === 'file' ? '' : 'display:none;' }}">
+                        <label for="formFile">Input File Dokumen:</label>
+                        <input class="form-control" type="file" id="formFile" name="dokumen_file">
+                    </div>
+
+                    <div id="linkInput" class="mb-3" style="margin-left:200px; margin-top:10px" style="{{ old('inputType', $inputType) === 'link' ? '' : 'display:none;' }}">
+                        <label for="formLink">Input Link Dokumen:</label>
+                        <input class="form-control" type="url" id="formLink" name="dokumen_link">
                     </div>
 
                     <div class="form-label">
@@ -73,12 +86,12 @@
                         <label for="permissions">Izinkan siapa saja yang melihat:</label>
                         <div class="d-flex flex-wrap">
                             @foreach ($jabatanList as $jabatan)
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $jabatan }}" id="{{ $jabatan }}" {{ in_array($jabatan, old('permissions', [])) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="{{ $jabatan }}">
-                                        {{ $jabatan }}
-                                    </label>
-                                </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $jabatan }}" id="{{ $jabatan }}" {{ in_array($jabatan, old('permissions', [])) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="{{ $jabatan }}">
+                                    {{ $jabatan }}
+                                </label>
+                            </div>
                             @endforeach
                         </div>
                     </div>
@@ -99,6 +112,28 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleInputFields() {
+            var inputType = document.getElementById('inputType').value;
+            var fileInput = document.getElementById('fileInput');
+            var linkInput = document.getElementById('linkInput');
+
+            if (inputType === 'file') {
+                fileInput.style.display = 'block';
+                linkInput.style.display = 'none';
+            } else if (inputType === 'link') {
+                fileInput.style.display = 'none';
+                linkInput.style.display = 'block';
+            }
+        }
+
+        // Call toggleInputFields once to initialize based on the current selection
+        toggleInputFields();
+
+        // Add event listener to call toggleInputFields every time the dropdown value changes
+        document.getElementById('inputType').addEventListener('change', toggleInputFields);
+    });
+
     // Ambil nama pengguna dari server dan simpan di localStorage
     fetch('/get-user-name')
         .then(response => response.json())
@@ -107,25 +142,25 @@
 
             // Ambil nama pengguna dari local storage
             var userName = localStorage.getItem('user_active');
-            
+
             // Set nilai input dengan id 'Create_by' menjadi nilai nama pengguna dari local storage
             if (userName) {
                 document.getElementById('User').value = userName; // Menggunakan 'User' sebagai id input
             }
         });
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const allCheckbox = document.getElementById('all');
         const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#all)');
 
-        allCheckbox.addEventListener('change', function () {
+        allCheckbox.addEventListener('change', function() {
             checkboxes.forEach(checkbox => {
                 checkbox.checked = this.checked;
             });
         });
 
         checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
+            checkbox.addEventListener('change', function() {
                 if (!this.checked) {
                     allCheckbox.checked = false;
                 } else if (document.querySelectorAll('input[type="checkbox"]:not(#all):checked').length === checkboxes.length) {
@@ -133,9 +168,9 @@
                 }
             });
         });
-        });
+    });
 
-        document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         fetch('{{ route('kategori-dokumen') }}')
             .then(response => response.json())
             .then(data => {

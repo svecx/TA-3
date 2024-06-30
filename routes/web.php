@@ -102,5 +102,4 @@ Route::get('/validasi/edit/{id}', [ValidasiController::class, 'edit'])->name('va
 Route::post('/validasi/update/{id}', [ValidasiController::class, 'update'])->name('validasi.update');
 Route::delete('/validasi/destroy/{id}', [ValidasiController::class, 'destroy'])->name('validasi.destroy');
 Route::get('/get-validasi-dokumen', [ValidasiController::class, 'getValidasiDokumen'])->name('get-validasi-dokumen');
-
-
+Route::get('/create-dokumen', [JabatanController::class, 'create'])->name('create-dokumen');

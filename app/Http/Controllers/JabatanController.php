@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class JabatanController extends Controller
 {
-
     public function create()
     {
-        $jabatanList = Jabatan::all()->pluck('nama_jabatan')->toArray();
-        return view('input_dokumen', compact('jabatanList'));
+        $jabatanList = Jabatan::pluck('nama_jabatan')->toArray();
+        $inputType = old('inputType', 'file'); // Default to 'file' if not set
+        return view('input_dokumen', compact('jabatanList', 'inputType'));
     }
 
     public function getJabatan()
@@ -19,6 +19,7 @@ class JabatanController extends Controller
         $jabatan = Jabatan::all();
         return response()->json($jabatan);
     }
+
     public function index()
     {
         $jabatan = Jabatan::all();

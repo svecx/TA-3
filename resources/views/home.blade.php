@@ -46,33 +46,35 @@
 </div>
 
 <!-- Modal for Unapproved Users -->
-<div class="modal fade" id="unapprovedUsersModal" tabindex="-1" aria-labelledby="unapprovedUsersModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="unapprovedUsersModalLabel">Pengguna Belum Disetujui</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Jabatan</th>
-                            <th>Pesan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unapprovedUsersTableBody">
-                        <!-- Data pengguna belum di-approve akan ditampilkan di sini -->
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
+@if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
+                    <div class="modal fade" id="unapprovedUsersModal" tabindex="-1" aria-labelledby="unapprovedUsersModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="unapprovedUsersModalLabel">Pengguna Belum Disetujui</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama</th>
+                                                <th>Jabatan</th>
+                                                <th>Pesan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="unapprovedUsersTableBody">
+                                            <!-- Data pengguna belum di-approve akan ditampilkan di sini -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
 <!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
