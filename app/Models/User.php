@@ -21,7 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'jabatan',
-        'approved', // Tambahkan approved jika Anda ingin mengisi nilai ini
+        'approved', // Include 'approved' if you want to set this value
     ];
 
     /**
@@ -41,6 +41,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'approved' => 'boolean', // Menganggap approved sebagai boolean
+        'approved' => 'boolean', // Treat 'approved' as boolean
     ];
 }
+

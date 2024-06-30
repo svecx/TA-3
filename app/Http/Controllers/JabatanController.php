@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 class JabatanController extends Controller
 {
 
+    public function create()
+    {
+        $jabatanList = Jabatan::all()->pluck('nama_jabatan')->toArray();
+        return view('input_dokumen', compact('jabatanList'));
+    }
+
     public function getJabatan()
     {
         $jabatan = Jabatan::all();
