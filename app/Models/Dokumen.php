@@ -11,8 +11,10 @@ class Dokumen extends Model
         'deskripsi_dokumen',
         'kategori_dokumen',
         'validasi_dokumen',
+        'status_file',
         'tahun_dokumen',
         'dokumen_file',
+        'dokumen_link',
         'tags',
         'view',
         'created_by',
@@ -22,7 +24,6 @@ class Dokumen extends Model
     {
         return $this->hasMany(History::class);
     }
-
 
     public function setViewAttribute($value)
     {

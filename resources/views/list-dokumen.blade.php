@@ -68,6 +68,7 @@
             <th scope="col">File</th>
             <th scope="col">Tags</th>
             <th scope="col" style="width: 7.5rem;">View</th>
+            <th scope="col" style="width: 7.5rem;">Aksi</th>
         </tr>
     </thead>
     <tbody id="documentTableBody">
@@ -95,6 +96,12 @@
                         </td>
                         <td>{{ $document->tags }}</td>
                         <td>{{ $document->view }}</td>
+                        <td>
+                    <a href="{{ asset('storage/documents/' . $document->dokumen_file) }}" class="btn btn-link p-0" style="display: inline-block;margin-right: 0.3rem" download>
+                        <i class="fa fa-download"></i>
+                    </a>
+                    
+                </td>
                     </tr>
                 @endif
             @elseif(auth()->user()->jabatan === 'Dosen')
@@ -108,12 +115,29 @@
                         <td>{{ $document->validasi_dokumen }}</td>
                         <td style="max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $document->tahun_dokumen }}</td>
                         <td>
-                            <a href="{{ asset('storage/documents/' . $document->dokumen_file) }}" target="_blank">
-                                <i class="fa fa-file" aria-hidden="true"></i>
-                            </a>
-                        </td>
+                        @if ($document->status_file === 0)
+    <a href="{{ asset('storage/documents/' . $document->dokumen_file) }}" target="_blank">
+        <i class="fa fa-file" aria-hidden="true"></i> <!-- Menggunakan ikon file -->
+    </a>
+@elseif ($document->status_file === 1)
+    <a href="{{ $document->dokumen_link }}" target="_blank">
+        <i class="fa fa-link" aria-hidden="true"></i> <!-- Menggunakan ikon link -->
+    </a>
+@endif
+
+</td>
+
                         <td>{{ $document->tags }}</td>
                         <td>{{ $document->view }}</td>
+                        <td>
+                    <a href="{{ asset('storage/documents/' . $document->dokumen_file) }}" class="btn btn-link p-0" style="display: inline-block;margin-right: 0.3rem" download>
+                        <i class="fa fa-download"></i>
+                    </a>
+                    <a href="{{ route('dokumen.history', $document->id) }}" class="btn btn-link p-0" style="display: inline-block;margin-right: 0.3rem">
+                        <i class="fa fa-history" aria-hidden="true" style="color: blue;"></i>
+                    </a>
+                    
+                </td>
                     </tr>
                 @endif
             @else
