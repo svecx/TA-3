@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 30, 2024 at 06:07 PM
+-- Generation Time: Jul 08, 2024 at 12:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,8 +34,10 @@ CREATE TABLE `dokumens` (
   `deskripsi_dokumen` text NOT NULL,
   `kategori_dokumen` varchar(255) NOT NULL,
   `validasi_dokumen` varchar(255) NOT NULL,
+  `status_file` tinyint(1) DEFAULT 0,
   `tahun_dokumen` year(4) NOT NULL,
-  `dokumen_file` varchar(255) NOT NULL,
+  `dokumen_link` varchar(255) DEFAULT NULL,
+  `dokumen_file` varchar(255) DEFAULT NULL,
   `tags` varchar(255) DEFAULT NULL,
   `view` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'active',
@@ -47,28 +49,34 @@ CREATE TABLE `dokumens` (
 -- Dumping data for table `dokumens`
 --
 
-INSERT INTO `dokumens` (`id`, `created_by`, `judul_dokumen`, `deskripsi_dokumen`, `kategori_dokumen`, `validasi_dokumen`, `tahun_dokumen`, `dokumen_file`, `tags`, `view`, `status`, `created_at`, `updated_at`) VALUES
-(63, 'Ketua Jurusan', 'Dokumen Pemberitahuan', 'Dokumen berisi pemberitahuan', 'Dokumen Tata Pamong', 'Ketua Jurusan', '2023', 'Dokumen Internal.pdf', 'tag', 'kajur,sekjur', 'active', '2024-06-03 00:55:35', '2024-06-27 05:57:30'),
-(64, 'Dosen', 'Dokumen Laporan', 'Dokumen berisi laporan kegiatan', 'Dokumen Tata Kelola', 'Ketua Jurusan', '2022', 'Use Case Diagram.pdf', 'dokumen', 'kajur,sekjur', 'active', '2024-06-03 00:57:35', '2024-06-27 05:57:30'),
-(65, 'Kaprodi', 'Dokumen Tujuan', 'Dokumen berisi tujuan', 'Dokumen Tujuan', 'Kaprodi', '2023', 'Dokumen Tujuan.pdf', 'Tujuan', 'kajur,sekjur', 'active', '2024-06-02 17:57:35', '2024-06-27 05:57:30'),
-(66, 'Dosen', 'Dokumen Strategi', 'Dokumen berisi strategi', 'Dokumen Strategi', 'Dosen', '2023', 'Dokumen Strategi.pdf', 'Strategi', 'kajur,sekjur', 'active', '2024-06-02 17:58:35', '2024-06-27 05:57:30'),
-(67, 'Adm', 'Dokumen Tata Pamong', 'Dokumen berisi tata pamong', 'Dokumen Tata Pamong', 'Adm', '2023', 'Dokumen Tata Pamong.pdf', 'Tata Pamong', 'kaprodi,dosen', 'active', '2024-06-02 17:59:35', '2024-06-27 06:01:47'),
-(68, 'Mahasiswa', 'Dokumen Tata Kelola', 'Dokumen berisi tata kelola', 'Dokumen Tata Kelola', 'Mahasiswa', '2023', 'Dokumen Tata Kelola.pdf', 'Tata Kelola', 'kaprodi,dosen', 'active', '2024-06-02 18:00:35', '2024-06-27 06:01:47'),
-(69, 'Admin', 'Dokumen Kerjasama', 'Dokumen berisi kerjasama', 'Dokumen Kerjasama', 'Admin', '2023', 'Dokumen Kerjasama.pdf', 'Kerjasama', 'kaprodi,dosen', 'active', '2024-06-02 18:01:35', '2024-06-27 06:01:47'),
-(70, 'Ketua Jurusan', 'Dokumen Mahasiswa', 'Dokumen berisi mahasiswa', 'Dokumen Mahasiswa', 'Ketua Jurusan', '2023', 'Dokumen Mahasiswa.pdf', 'Mahasiswa', 'kaprodi,dosen', 'active', '2024-06-02 18:02:35', '2024-06-27 06:01:47'),
-(71, 'Sekretaris Jurusan', 'Dokumen Sumber Daya Manusia', 'Dokumen berisi SDM', 'Dokumen Sumber Daya Manusia', 'Sekretaris Jurusan', '2023', 'Dokumen Sumber Daya Manusia.pdf', 'Sumber Daya Manusia', 'Kaprodi,Dosen', 'active', '2024-06-02 18:03:35', '2024-06-27 09:20:37'),
-(72, 'Kaprodi', 'Dokumen Keuangan', 'Dokumen berisi keuangan', 'Dokumen Keuangan', 'Kaprodi', '2023', 'Dokumen Keuangan.pdf', 'Keuangan', 'adm,mahasiswa', 'active', '2024-06-02 18:04:35', '2024-06-27 06:02:49'),
-(73, 'Dosen', 'Dokumen Sarana Prasarana', 'Dokumen berisi sarana dan prasarana', 'Dokumen Sarana Prasarana', 'Dosen', '2023', 'Dokumen Sarana Prasarana.pdf', 'Sarana Prasarana', 'adm,mahasiswa', 'active', '2024-06-02 18:05:35', '2024-06-27 06:02:49'),
-(74, 'Adm', 'Dokumen Penelitian', 'Dokumen berisi penelitian', 'Dokumen Penelitian', 'Adm', '2023', 'Dokumen Penelitian.pdf', 'Penelitian', 'dosen,mahasiswa', 'active', '2024-06-02 18:06:35', '2024-06-27 09:09:56'),
-(75, 'Mahasiswa', 'Dokumen Pengabdian Kepada Masyarakat', 'Dokumen berisi pengabdian kepada masyarakat', 'Dokumen Pengabdian Kepada Masyarakat', 'Mahasiswa', '2023', 'Dokumen Pengabdian Kepada Masyarakat.pdf', 'Pengabdian Kepada Masyarakat', 'adm,mahasiswa', 'active', '2024-06-02 18:07:35', '2024-06-27 06:02:49'),
-(77, 'Ketua Jurusan', 'Dokumen Capaian Tridarma', 'Dokumen berisi capaian tridarma', 'Dokumen Capaian Tridarma', 'Ketua Jurusan', '2023', 'Dokumen Capaian Tridarma.pdf', 'Capaian Tridarma', 'adm,mahasiswa', 'active', '2024-06-02 18:09:35', '2024-06-27 06:02:49'),
-(78, 'Ketua Jurusan', 'Dokumen Pendidikan', 'Dokumen berisi pendidikan', 'Dokumen Pendidikan', 'Ketua Jurusan', '2023', 'Dokumen Pendidikan.pdf', 'Pendidikan', '\'Mahasiswa\',\'Dosen\'', 'active', '2024-06-02 17:55:35', '2024-06-27 09:18:07'),
-(79, 'Sekretaris Jurusan', 'Dokumen Visi Misi', 'Dokumen berisi visi dan misi', 'Dokumen Visi Misi', 'Sekretaris Jurusan', '2023', 'Dokumen Visi Misi.pdf', 'Visi Misi', 'mahasiswa', 'active', '2024-06-02 17:56:35', '2024-06-27 06:03:59'),
-(96, 'Admin', 'Dokumen Iuran', 'Dokumen berisi iuran', 'Dokumen Iuran', 'Admin', '2023', 'Dokumen Iuran.pdf', 'Iuran', 'mahasiswa', 'active', '2024-06-16 21:02:24', '2024-06-27 06:03:59'),
-(105, 'Kaprodi', 'Dokumen Contoh', 'sa', 'Dokumen Capaian Tridarma', 'Ketua Jurusan', '2011', '/storage/uploads/1719071746_DAFTAR PUSTAKA.pdf', 'dfsa', 'mahasiswa', 'active', '2024-06-22 08:55:46', '2024-06-27 06:03:59'),
-(108, 'Kaprodi', 'contoh 2', 'contoh dokumen', 'Dokumen Pendidikan', 'Direktur', '2021', 'LISTING_PROGRAM.pdf', 'Contoh', 'all,kajur,sekjur,kaprodi,dosen,adm,mahasiswa', 'active', '2024-06-27 02:31:02', '2024-06-27 02:31:02'),
-(109, 'Dosen', 'Dokumen Contoh', 'contoh dokumen', 'Dokumen Pendidikan', 'Direktur', '2021', 'DAFTAR_PUSTAKA.pdf', 'Contoh', 'Kaprodi,Dosen', 'active', '2024-06-27 07:48:30', '2024-06-27 15:00:20'),
-(110, 'Dosen', 'Dokumen Contoh zxcv', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Program Studi', '2021', 'OUTPUT_PROGRAM.pdf', 'contoh', 'Ketua Jurusan,Sekretaris Jurusan,Dosen', 'active', '2024-06-27 16:35:04', '2024-06-27 16:35:04');
+INSERT INTO `dokumens` (`id`, `created_by`, `judul_dokumen`, `deskripsi_dokumen`, `kategori_dokumen`, `validasi_dokumen`, `status_file`, `tahun_dokumen`, `dokumen_link`, `dokumen_file`, `tags`, `view`, `status`, `created_at`, `updated_at`) VALUES
+(63, 'Ketua Jurusan', 'Dokumen Pemberitahuan', 'Dokumen berisi pemberitahuan', 'Dokumen Tata Pamong', 'Ketua Jurusan', 0, '2023', '', 'Dokumen Internal.pdf', 'tag', 'kajur,sekjur', 'active', '2024-06-03 00:55:35', '2024-06-27 05:57:30'),
+(64, 'Dosen', 'Dokumen Laporan', 'Dokumen berisi laporan kegiatan', 'Dokumen Tata Kelola', 'Ketua Jurusan', 0, '2022', '', 'Use Case Diagram.pdf', 'dokumen', 'kajur,sekjur', 'active', '2024-06-03 00:57:35', '2024-06-27 05:57:30'),
+(65, 'Kaprodi', 'Dokumen Tujuan', 'Dokumen berisi tujuan', 'Dokumen Tujuan', 'Kaprodi', 0, '2023', '', 'Dokumen Tujuan.pdf', 'Tujuan', 'kajur,sekjur', 'active', '2024-06-02 17:57:35', '2024-06-27 05:57:30'),
+(66, 'Dosen', 'Dokumen Strategi', 'Dokumen berisi strategi', 'Dokumen Strategi', 'Dosen', 0, '2023', '', 'Dokumen Strategi.pdf', 'Strategi', 'kajur,sekjur', 'active', '2024-06-02 17:58:35', '2024-06-27 05:57:30'),
+(67, 'Adm', 'Dokumen Tata Pamong', 'Dokumen berisi tata pamong', 'Dokumen Tata Pamong', 'Adm', 0, '2023', '', 'Dokumen Tata Pamong.pdf', 'Tata Pamong', 'kaprodi,dosen', 'active', '2024-06-02 17:59:35', '2024-06-27 06:01:47'),
+(68, 'Mahasiswa', 'Dokumen Tata Kelola', 'Dokumen berisi tata kelola', 'Dokumen Tata Kelola', 'Mahasiswa', 0, '2023', '', 'Dokumen Tata Kelola.pdf', 'Tata Kelola', 'kaprodi,dosen', 'active', '2024-06-02 18:00:35', '2024-06-27 06:01:47'),
+(69, 'Admin', 'Dokumen Kerjasama', 'Dokumen berisi kerjasama', 'Dokumen Kerjasama', 'Admin', 0, '2023', '', 'Dokumen Kerjasama.pdf', 'Kerjasama', 'kaprodi,dosen', 'active', '2024-06-02 18:01:35', '2024-06-27 06:01:47'),
+(70, 'Ketua Jurusan', 'Dokumen Mahasiswa', 'Dokumen berisi mahasiswa', 'Dokumen Mahasiswa', 'Ketua Jurusan', 0, '2023', '', 'Dokumen Mahasiswa.pdf', 'Mahasiswa', 'kaprodi,dosen', 'active', '2024-06-02 18:02:35', '2024-06-27 06:01:47'),
+(71, 'Sekretaris Jurusan', 'Dokumen Sumber Daya Manusia', 'Dokumen berisi SDM', 'Dokumen Sumber Daya Manusia', 'Sekretaris Jurusan', 0, '2023', '', 'Dokumen Sumber Daya Manusia.pdf', 'Sumber Daya Manusia', 'Kaprodi,Dosen', 'active', '2024-06-02 18:03:35', '2024-06-27 09:20:37'),
+(72, 'Kaprodi', 'Dokumen Keuangan', 'Dokumen berisi keuangan', 'Dokumen Keuangan', 'Kaprodi', 0, '2023', '', 'Dokumen Keuangan.pdf', 'Keuangan', 'adm,mahasiswa', 'active', '2024-06-02 18:04:35', '2024-06-27 06:02:49'),
+(73, 'Dosen', 'Dokumen Sarana Prasarana', 'Dokumen berisi sarana dan prasarana', 'Dokumen Sarana Prasarana', 'Direktur', 0, '2023', '', 'Dokumen Sarana Prasarana.pdf', 'Sarana Prasarana', 'adm,mahasiswa', 'active', '2024-06-02 18:05:35', '2024-07-07 07:52:07'),
+(74, 'Adm', 'Dokumen Penelitian', 'Dokumen berisi penelitian', 'Dokumen Penelitian', 'Adm', 0, '2023', '', 'Dokumen Penelitian.pdf', 'Penelitian', 'Dosen,Mahasiswa', 'active', '2024-06-02 18:06:35', '2024-07-07 11:57:46'),
+(75, 'Mahasiswa', 'Dokumen Pengabdian Kepada Masyarakat', 'Dokumen berisi pengabdian kepada masyarakat', 'Dokumen Pengabdian Kepada Masyarakat', 'Mahasiswa', 0, '2023', '', 'Dokumen Pengabdian Kepada Masyarakat.pdf', 'Pengabdian Kepada Masyarakat', 'adm,mahasiswa', 'active', '2024-06-02 18:07:35', '2024-06-27 06:02:49'),
+(77, 'Ketua Jurusan', 'Dokumen Capaian Tridarma', 'Dokumen berisi capaian tridarma', 'Dokumen Capaian Tridarma', 'Ketua Jurusan', 0, '2023', '', 'Dokumen Capaian Tridarma.pdf', 'Capaian Tridarma', 'adm,mahasiswa', 'active', '2024-06-02 18:09:35', '2024-06-27 06:02:49'),
+(78, 'Ketua Jurusan', 'Dokumen Pendidikan', 'Dokumen berisi pendidikan', 'Dokumen Pendidikan', 'Ketua Jurusan', 0, '2023', '', 'Dokumen Pendidikan.pdf', 'Pendidikan', 'Mahasiswa,Dosen', 'active', '2024-06-02 17:55:35', '2024-07-07 12:00:25'),
+(79, 'Sekretaris Jurusan', 'Dokumen Visi Misi', 'Dokumen berisi visi dan misi', 'Dokumen Visi Misi', 'Sekretaris Jurusan', 0, '2023', '', 'Dokumen Visi Misi.pdf', 'Visi Misi', 'mahasiswa', 'active', '2024-06-02 17:56:35', '2024-06-27 06:03:59'),
+(96, 'Admin', 'Dokumen Iuran', 'Dokumen berisi iuran', 'Dokumen Iuran', 'Admin', 0, '2023', '', 'Dokumen Iuran.pdf', 'Iuran', 'mahasiswa', 'active', '2024-06-16 21:02:24', '2024-06-27 06:03:59'),
+(132, 'Dosen', 'Dokumen Contoh link', 'Contoh link', 'Dokumen Sumber Daya Manusia', 'Kelompok Bidang Keahlian', 1, '2023', 'https://www.youtube.com/watch?v=FGtfuZeaiKY', NULL, 'link', 'Adm,Admin,contoh 3,Dosen', 'active', '2024-07-05 21:26:35', '2024-07-06 04:28:15'),
+(133, 'Dosen', 'Dokumen Link', 'Link', 'Dokumen Sumber Daya Manusia', 'Ketua Jurusan', 1, '2023', 'https://www.youtube.com/watch?v=FGtfuZeaiKY', NULL, 'Contoh 2', 'Adm,Admin,Dosen', 'active', '2024-07-05 21:39:50', '2024-07-05 21:39:50'),
+(134, 'Dosen', 'sa', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Jurusan', 0, '2018', NULL, 'BAB_IV.pdf', 'contoh', 'Adm,Admin,Dosen', 'active', '2024-07-05 21:48:34', '2024-07-05 21:48:34'),
+(135, 'Dosen', 'Dokumen Contoh', 'Contoh', 'Dokumen Pendidikan', 'Ketua Program Studi', 0, '2017', NULL, 'BAB_III.pdf', 'dfsa', '', 'active', '2024-07-06 05:09:55', '2024-07-06 05:09:55'),
+(136, 'Dosen', 'Dokumen Contoh 1', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Jurusan', 0, '2018', NULL, 'COVER_PENULISAN.pdf', 'Contoh 1', 'Ketua Jurusan,Sekretaris Jurusan,Dosen', 'active', '2024-07-06 16:28:53', '2024-07-06 16:28:53'),
+(137, 'Dosen', 'Dokumen Contoh', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Jurusan', 1, '2023', 'https://www.youtube.com/watch?v=J-2v5slYzJc', NULL, 'contoh link', 'Ketua Jurusan,Sekretaris Jurusan,Dosen', 'active', '2024-07-06 20:28:54', '2024-07-06 20:28:54'),
+(138, 'Dosen', 'Dokumen Contoh', 'Contoh', 'Dokumen Pendidikan', 'Ketua Program Studi', 1, '2024', 'https://www.youtube.com/watch?v=J-2v5slYzJc', NULL, 'Contoh 2', 'Ketua Jurusan,Sekretaris Jurusan,Dosen', 'active', '2024-07-06 20:29:24', '2024-07-06 20:29:24'),
+(139, 'Dosen', 'Dokumen Contoh', 'Contoh 3', 'Dokumen Pendidikan', 'Ketua Program Studi', 0, '2017', NULL, 'BAB_II.pdf', 'Contoh 3', 'Ketua Jurusan,Sekretaris Jurusan,Dosen', 'active', '2024-07-06 20:29:59', '2024-07-06 20:29:59'),
+(140, 'Dosen', 'Dokumen Contoh 123', 'Contoh 3', 'Dokumen Sumber Daya Manusia', 'Ketua Program Studi', 0, '2018', NULL, 'BAB_III.pdf', 'Contoh', 'all,kajur,sekjur,dosen', 'active', '2024-07-07 04:37:03', '2024-07-07 08:00:08'),
+(141, 'Dosen', 'Dokumen Contoh 3', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Jurusan', 0, '2016', NULL, 'BAB_IV.pdf', 'Contoh 1234', 'all', 'active', '2024-07-07 05:25:14', '2024-07-07 07:56:09');
 
 -- --------------------------------------------------------
 
@@ -107,6 +115,7 @@ INSERT INTO `draft` (`id`, `created_by`, `judul_dokumen`, `deskripsi_dokumen`, `
 
 CREATE TABLE `histories` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
   `dokumen_id` int(11) NOT NULL,
   `judul_dokumen` varchar(255) NOT NULL,
   `deskripsi_dokumen` text NOT NULL,
@@ -115,9 +124,21 @@ CREATE TABLE `histories` (
   `tahun_dokumen` int(11) NOT NULL,
   `dokumen_file` varchar(255) NOT NULL,
   `tags` varchar(255) DEFAULT NULL,
+  `view` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `histories`
+--
+
+INSERT INTO `histories` (`id`, `created_by`, `dokumen_id`, `judul_dokumen`, `deskripsi_dokumen`, `kategori_dokumen`, `validasi_dokumen`, `tahun_dokumen`, `dokumen_file`, `tags`, `view`, `created_at`, `updated_at`) VALUES
+(2, 'Dosen', 73, 'Dokumen Sarana Prasarana', 'Dokumen berisi sarana dan prasarana', 'Dokumen Sarana Prasarana', 'Dosen', 2023, 'Dokumen Sarana Prasarana.pdf', 'Sarana Prasarana', 'adm,mahasiswa', '2024-07-07 07:52:07', '2024-07-07 07:52:07'),
+(3, 'Dosen', 140, 'Dokumen Contoh', 'Contoh 3', 'Dokumen Sumber Daya Manusia', 'Ketua Program Studi', 2018, 'BAB_III.pdf', 'Contoh', 'Ketua Jurusan,Sekretaris Jurusan,Kaprodi,Dosen', '2024-07-07 07:52:34', '2024-07-07 07:52:34'),
+(4, 'Dosen', 141, 'Dokumen Contoh 3', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Jurusan', 2016, 'BAB_IV.pdf', 'Contoh', 'All', '2024-07-07 07:54:12', '2024-07-07 07:54:12'),
+(5, 'Dosen', 141, 'Dokumen Contoh 3', 'Contoh', 'Dokumen Sumber Daya Manusia', 'Ketua Jurusan', 2016, 'BAB_IV.pdf', 'Contoh 123', 'all', '2024-07-07 07:56:09', '2024-07-07 07:56:09'),
+(6, 'Dosen', 140, 'Dokumen Contoh 1', 'Contoh 3', 'Dokumen Sumber Daya Manusia', 'Ketua Program Studi', 2018, 'BAB_III.pdf', 'Contoh', 'kajur,sekjur,dosen', '2024-07-07 08:00:08', '2024-07-07 08:00:08');
 
 -- --------------------------------------------------------
 
@@ -136,6 +157,7 @@ CREATE TABLE `jabatan` (
 --
 
 INSERT INTO `jabatan` (`id`, `nama_jabatan`, `created_at`) VALUES
+(1, 'All', '2024-07-07 11:47:35'),
 (20, 'Ketua Jurusan', '2024-06-26 15:50:10'),
 (21, 'Sekretaris Jurusan', '2024-06-26 15:50:10'),
 (22, 'Kaprodi', '2024-06-26 15:50:10'),
@@ -143,8 +165,7 @@ INSERT INTO `jabatan` (`id`, `nama_jabatan`, `created_at`) VALUES
 (24, 'Adm', '2024-06-26 15:50:10'),
 (25, 'Mahasiswa', '2024-06-26 15:50:10'),
 (26, 'Admin', '2024-06-26 15:50:10'),
-(27, 'contoh 1', '2024-06-26 21:03:48'),
-(29, 'contoh 3', '2024-06-27 22:29:18');
+(27, 'contoh 1', '2024-06-26 21:03:48');
 
 -- --------------------------------------------------------
 
@@ -296,7 +317,7 @@ ALTER TABLE `validasi`
 -- AUTO_INCREMENT for table `dokumens`
 --
 ALTER TABLE `dokumens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- AUTO_INCREMENT for table `draft`
@@ -308,13 +329,13 @@ ALTER TABLE `draft`
 -- AUTO_INCREMENT for table `histories`
 --
 ALTER TABLE `histories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `jabatan`
 --
 ALTER TABLE `jabatan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `kategori_dokumen`
