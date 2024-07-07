@@ -70,18 +70,15 @@
                     </div>
 
                     <div class="form-label">
-                        <label for="permissions">Izinkan siapa saja yang melihat:</label>
-                        <div class="d-flex flex-wrap">
-                            @foreach ($jabatanList as $jabatan)
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $jabatan }}" id="{{ $jabatan }}" {{ in_array($jabatan, old('permissions', [])) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="{{ $jabatan }}">
-                                    {{ $jabatan }}
-                                </label>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+    <label for="permissions">Izinkan siapa saja yang melihat:</label>
+    <div class="row row-cols-3">
+        <div class="col-md-8" id="permissions-container">
+            <!-- Kontainer untuk checkbox lainnya -->
+        </div>
+    </div>
+</div>
+
+
 
                     <div class="form-label">
                         <div>
@@ -136,58 +133,75 @@
             }
         });
 
-        fetch('{{ route('get-jabatan') }}')
-    .then(response => response.json())
-    .then(data => {
-        const permissionsContainer = document.querySelector('.d-flex.flex-wrap');
-        permissionsContainer.innerHTML = ''; // Reset options
+        document.addEventListener('DOMContentLoaded', function() {
+    // Fetch jabatan data
+    fetch('{{ route('get-jabatan') }}')
+        .then(response => response.json())
+        .then(data => {
+            const permissionsContainer = document.getElementById('permissions-container');
+            permissionsContainer.innerHTML = ''; // Reset options
 
-        data.forEach(jabatan => {
-            const checkboxContainer = document.createElement('div');
-            checkboxContainer.classList.add('form-check');
+            data.forEach(jabatan => {
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.classList.add('form-check');
 
-            const checkbox = document.createElement('input');
-            checkbox.classList.add('form-check-input');
-            checkbox.type = 'checkbox';
-            checkbox.name = 'permissions[]';
-            checkbox.value = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
-            checkbox.id = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                const checkbox = document.createElement('input');
+                checkbox.classList.add('form-check-input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'permissions[]';
+                checkbox.value = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                checkbox.id = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
 
-            const label = document.createElement('label');
-            label.classList.add('form-check-label');
-            label.htmlFor = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
-            label.textContent = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                const label = document.createElement('label');
+                label.classList.add('form-check-label');
+                label.htmlFor = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                label.textContent = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
 
-            checkboxContainer.appendChild(checkbox);
-            checkboxContainer.appendChild(label);
-            permissionsContainer.appendChild(checkboxContainer);
+                checkboxContainer.appendChild(checkbox);
+                checkboxContainer.appendChild(label);
+                permissionsContainer.appendChild(checkboxContainer);
+            });
+
+            // Add event listeners after checkboxes are added
+            addCheckboxEventListeners();
+        })
+        .catch(error => {
+            console.error('Error fetching jabatan:', error);
         });
-    })
-    .catch(error => {
-        console.error('Error fetching jabatan:', error);
-    });
 
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const allCheckbox = document.getElementById('all');
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#all)');
+    function addCheckboxEventListeners() {
+        const allCheckbox = document.getElementById('allCheckbox');
+        const checkboxes = document.querySelectorAll('input.form-check-input:not(#allCheckbox)');
 
         allCheckbox.addEventListener('change', function() {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
+            if (this.checked) {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.style.display = 'none';
+                });
+            } else {
+                checkboxes.forEach(checkbox => {
+                    checkbox.style.display = 'block';
+                });
+            }
         });
 
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
-                if (!this.checked) {
+                if (this.checked) {
                     allCheckbox.checked = false;
-                } else if (document.querySelectorAll('input[type="checkbox"]:not(#all):checked').length === checkboxes.length) {
-                    allCheckbox.checked = true;
+                    checkboxes.forEach(cb => cb.style.display = 'block');
                 }
             });
         });
-    });
+    }
+});
+
+
+
+
+
+
 
     document.addEventListener('DOMContentLoaded', function() {
         fetch('{{ route('kategori-dokumen') }}')

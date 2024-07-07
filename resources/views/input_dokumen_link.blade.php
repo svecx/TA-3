@@ -19,13 +19,13 @@
             <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                 <h3 class="judul">FORM INPUT DOKUMEN</h3>
                 <form action="{{ route('simpan-link') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-    @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
+                    @csrf
+                    @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
                     <div>
                         <img src="{{ asset('images/gambar2.png') }}" alt="gambar" style="position:absolute; top:7%; left:600px; opacity:0.2; max-width: 110%; height: 600px">
                     </div>
@@ -59,9 +59,9 @@
 
 
                     <div id="linkInput" class="mb-3" style="margin-left: 200px;">
-        <label for="formLink">Input Link Dokumen:</label>
-        <input class="form-control" type="url" id="formLink" name="dokumen_link" value="{{ old('dokumen_link') }}">
-    </div>
+                        <label for="formLink">Input Link Dokumen:</label>
+                        <input class="form-control" type="url" id="formLink" name="dokumen_link" value="{{ old('dokumen_link') }}">
+                    </div>
 
 
 
@@ -73,18 +73,13 @@
                     </div>
 
                     <div class="form-label">
-                        <label for="permissions">Izinkan siapa saja yang melihat:</label>
-                        <div class="d-flex flex-wrap">
-                            @foreach ($jabatanList as $jabatan)
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $jabatan }}" id="{{ $jabatan }}" {{ in_array($jabatan, old('permissions', [])) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="{{ $jabatan }}">
-                                    {{ $jabatan }}
-                                </label>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+    <label for="permissions">Izinkan siapa saja yang melihat:</label>
+    <div class="row row-cols-3">
+        <div class="col-md-8" id="permissions-container">
+            <!-- Kontainer untuk checkbox lainnya -->
+        </div>
+    </div>
+</div>
 
                     <div class="form-label">
                         <div>
@@ -102,7 +97,7 @@
 </div>
 
 <script>
-     document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         function toggleInputFields() {
             var inputType = document.getElementById('inputType').value;
             var linkInput = document.getElementById('linkInput');
@@ -130,7 +125,7 @@
             }
         });
 
-        fetch('/get-user-name')
+    fetch('/get-user-name')
         .then(response => response.json())
         .then(data => {
             localStorage.setItem('user_active', data.name);
@@ -144,57 +139,69 @@
             }
         });
 
-        fetch('{{ route('get-jabatan') }}')
-    .then(response => response.json())
-    .then(data => {
-        const permissionsContainer = document.querySelector('.d-flex.flex-wrap');
-        permissionsContainer.innerHTML = ''; // Reset options
+        document.addEventListener('DOMContentLoaded', function() {
+    // Fetch jabatan data
+    fetch('{{ route('get-jabatan') }}')
+        .then(response => response.json())
+        .then(data => {
+            const permissionsContainer = document.getElementById('permissions-container');
+            permissionsContainer.innerHTML = ''; // Reset options
 
-        data.forEach(jabatan => {
-            const checkboxContainer = document.createElement('div');
-            checkboxContainer.classList.add('form-check');
+            data.forEach(jabatan => {
+                const checkboxContainer = document.createElement('div');
+                checkboxContainer.classList.add('form-check');
 
-            const checkbox = document.createElement('input');
-            checkbox.classList.add('form-check-input');
-            checkbox.type = 'checkbox';
-            checkbox.name = 'permissions[]';
-            checkbox.value = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
-            checkbox.id = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                const checkbox = document.createElement('input');
+                checkbox.classList.add('form-check-input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'permissions[]';
+                checkbox.value = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                checkbox.id = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
 
-            const label = document.createElement('label');
-            label.classList.add('form-check-label');
-            label.htmlFor = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
-            label.textContent = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                const label = document.createElement('label');
+                label.classList.add('form-check-label');
+                label.htmlFor = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                label.textContent = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
 
-            checkboxContainer.appendChild(checkbox);
-            checkboxContainer.appendChild(label);
-            permissionsContainer.appendChild(checkboxContainer);
+                checkboxContainer.appendChild(checkbox);
+                checkboxContainer.appendChild(label);
+                permissionsContainer.appendChild(checkboxContainer);
+            });
+
+            // Add event listeners after checkboxes are added
+            addCheckboxEventListeners();
+        })
+        .catch(error => {
+            console.error('Error fetching jabatan:', error);
         });
-    })
-    .catch(error => {
-        console.error('Error fetching jabatan:', error);
-    });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const allCheckbox = document.getElementById('all');
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]:not(#all)');
+    function addCheckboxEventListeners() {
+        const allCheckbox = document.getElementById('allCheckbox');
+        const checkboxes = document.querySelectorAll('input.form-check-input:not(#allCheckbox)');
 
         allCheckbox.addEventListener('change', function() {
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
+            if (this.checked) {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.style.display = 'none';
+                });
+            } else {
+                checkboxes.forEach(checkbox => {
+                    checkbox.style.display = 'block';
+                });
+            }
         });
 
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
-                if (!this.checked) {
+                if (this.checked) {
                     allCheckbox.checked = false;
-                } else if (document.querySelectorAll('input[type="checkbox"]:not(#all):checked').length === checkboxes.length) {
-                    allCheckbox.checked = true;
+                    checkboxes.forEach(cb => cb.style.display = 'block');
                 }
             });
         });
-    });
+    }
+});
 
     document.addEventListener('DOMContentLoaded', function() {
         fetch('{{ route('kategori-dokumen') }}')

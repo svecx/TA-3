@@ -192,12 +192,12 @@ class DokumenController extends Controller
     }
 
     public function history($id)
-    {
-        $dokumen = Dokumen::findOrFail($id);
-        $histories = $dokumen->histories()->orderBy('created_at', 'desc')->get(['id', 'judul_dokumen', 'deskripsi_dokumen', 'kategori_dokumen', 'validasi_dokumen', 'tahun_dokumen', 'dokumen_file', 'tags', 'created_by', 'created_at','view',]);
+{
+    $dokumen = Dokumen::findOrFail($id);
+    $histories = $dokumen->histories()->orderBy('created_at', 'desc')->get(['id','created_by', 'judul_dokumen', 'deskripsi_dokumen', 'kategori_dokumen', 'validasi_dokumen', 'tahun_dokumen', 'dokumen_file', 'tags', 'created_at', 'view']);
 
-        return view('history', compact('dokumen', 'histories'));
-    }
+    return view('history', compact('dokumen', 'histories'));
+}
 
     public function index()
     {
