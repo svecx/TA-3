@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\LinkController;
 use App\Http\Controllers\DokumenUserController;
 use App\Http\Controllers\DraftDocumentController;
 use App\Http\Controllers\UserController;
@@ -51,9 +53,12 @@ Route::get('dokumen/{id}/history', [DokumenController::class, 'history'])->name(
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/input-dokumen', [DokumenController::class, 'input'])->name('input-dokumen');
+Route::get('/input-dokumen/file', [FileController::class, 'input'])->name('input-dokumen-file'); 
+Route::get('/input-dokumen/link', [LinkController::class, 'input'])->name('input-dokumen-link'); 
 Route::get('/list-dokumen', [DokumenController::class, 'listDokumen'])->name('list-dokumen');
 Route::get('/list-dokumen-user', [DokumenUserController::class, 'listDokumen'])->name('list-dokumen-user');
 Route::post('simpan-dokumen', [DokumenController::class, 'store'])->name('simpan-dokumen');
+Route::post('simpan-link', [LinkController::class, 'store'])->name('simpan-link');
 Route::post('list-dokumen/process', [DokumenController::class, 'processList'])->name('list-dokumen.process');
 Route::get('/kategori-dokumen', [DokumenController::class, 'kategori'])->name('kategori-dokumen');
 Route::get('/dokumen/{id}/edit', [DokumenController::class, 'edit'])->name('dokumen.edit');
@@ -87,7 +92,7 @@ Route::post('/kategori-dokumen-view', [KategoriDokumenController::class, 'store'
 Route::get('/kategori-dokumen-view/{id}/edit', [KategoriDokumenController::class, 'edit'])->name('kategori-dokumen.edit');
 Route::put('/kategori-dokumen-view/{id}', [KategoriDokumenController::class, 'update'])->name('kategori-dokumen.update');
 Route::delete('/kategori-dokumen-view/{id}', [KategoriDokumenController::class, 'destroy'])->name('kategori-dokumen.destroy');
-Route::get('/jabatan', [JabatanController::class, 'getJabatan'])->name('jabatan');
+Route::get('/get-jabatan', [JabatanController::class, 'getJabatan'])->name('get-jabatan');
 Route::get('/jabatan-view', [JabatanController::class, 'index'])->name('jabatan.index');
 Route::post('/jabatan-view', [JabatanController::class, 'store'])->name('jabatan.store');
 Route::get('/jabatan-view/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
