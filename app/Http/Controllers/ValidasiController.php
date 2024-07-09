@@ -13,6 +13,7 @@ class ValidasiController extends Controller
     
         return response()->json($validasiList);
     }
+
     
 
     public function index()

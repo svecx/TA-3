@@ -11,8 +11,9 @@
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('draft-dokumen') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Deleted Dokumen</a>
             @if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
-            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Jabatan</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Role</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List User</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('validasi.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Validasi</a>
             @endif
         </div>
         <div class="tab-content" id="v-pills-tabContent">
@@ -20,10 +21,14 @@
             <!-- Icon search dan filter -->
             <div style="margin-left:200px; margin-bottom: 10px; display: flex; align-items:center;">
                 <div style="position: relative; width:300px">
-                    <input type="text" class="form-control" placeholder="Search" id="search" style="padding-right: 30px;">
-                    <span style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px; cursor: pointer;" id="searchIcon">
-                        <i class="fa fa-search" aria-hidden="true"></i>
-                    </span>
+                <form action="{{ route('list-user') }}" method="GET">
+        <div style="position: relative; width: 300px;">
+            <input type="text" class="form-control" placeholder="Search" name="search" id="search" style="padding-right: 30px;" value="{{ request('search') }}">
+            <span style="position: absolute; top: 50%; transform: translateY(-50%); right: 10px; cursor: pointer;" id="searchIcon">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </span>
+        </div>
+    </form>
                 </div>
                 <select name="yearFilter" class="form-control" id="yearFilter" style="width:300px; margin-left: 100px;">
                     <option value="all">Tahun Dokumen</option>
@@ -439,5 +444,32 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const originalRowsOrder = Array.from(document.querySelectorAll('#documentTableBody tr'));
+
+    // Fungsi untuk melakukan pencarian berdasarkan judul dokumen dan tag
+    function searchByTitleAndTag() {
+        var query = document.getElementById('search').value.trim().toLowerCase();
+        var rows = document.querySelectorAll('#documentTableBody tr');
+
+        rows.forEach(function(row) {
+            var title = row.cells[1].textContent.trim().toLowerCase();
+            var tags = row.cells[8].textContent.toLowerCase();
+            var tagArray = tags.split(',').map(tag => tag.trim());
+
+            var matchFound = title.includes(query) || tagArray.some(tag => tag.includes(query));
+
+            row.style.display = matchFound ? '' : 'none';
+        });
+
+        console.log('Pencarian selesai. Hasil yang ditampilkan:', query);
+    }
+
+    // Event listener untuk menangani pencarian saat tombol atau input diketik
+    document.getElementById('search').addEventListener('input', searchByTitleAndTag);
+    document.getElementById('searchIcon').addEventListener('click', searchByTitleAndTag);
+});
+
 </script>
 @endsection

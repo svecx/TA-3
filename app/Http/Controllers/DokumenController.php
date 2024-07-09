@@ -209,4 +209,19 @@ class DokumenController extends Controller
 
         return view('list-dokumen', compact('documents'));
     }
+
+    public function listUser(Request $request)
+{
+    $query = $request->input('search');
+    $documents = Dokumen::query()
+        ->when($query, function ($queryBuilder) use ($query) {
+            $queryBuilder->where('judul_dokumen', 'LIKE', "%{$query}%")
+                ->orWhere('tags', 'LIKE', "%{$query}%");
+        })
+        ->get();
+
+    return view('list_user', ['documents' => $documents]);
+}
+
+
 }

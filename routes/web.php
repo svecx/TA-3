@@ -108,3 +108,13 @@ Route::post('/validasi/update/{id}', [ValidasiController::class, 'update'])->nam
 Route::delete('/validasi/destroy/{id}', [ValidasiController::class, 'destroy'])->name('validasi.destroy');
 Route::get('/get-validasi-dokumen', [ValidasiController::class, 'getValidasiDokumen'])->name('get-validasi-dokumen');
 Route::get('/create-dokumen', [JabatanController::class, 'create'])->name('create-dokumen');
+
+Route::get('/validasi-view', [ValidasiController::class, 'index'])->name('validasi.index');
+Route::post('/validasi-view', [ValidasiController::class, 'store'])->name('validasi.store');
+Route::get('/validasi-view/create', [ValidasiController::class, 'create'])->name('validasi.create');
+Route::get('/validasi-view/{id}/edit', [ValidasiController::class, 'edit'])->name('validasi.edit');
+Route::put('/validasi-view/{id}', [ValidasiController::class, 'update'])->name('validasi.update');
+Route::delete('/validasi-view/{id}', [ValidasiController::class, 'destroy'])->name('validasi.destroy');
+Route::get('/validasi-dokumen', [ValidasiController::class, 'getValidasiDokumen'])->name('validasi.getValidasiDokumen');
+
+Route::get('/list-user', [DokumenController::class, 'listUser'])->name('list-user');

@@ -11,8 +11,9 @@
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('draft-dokumen') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Deleted Dokumen</a>
             @if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
-            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Jabatan</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Role</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List User</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('validasi.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Validasi</a>
             @endif
         </div>
         <div class="tab-content" id="v-pills-tabContent">
@@ -142,66 +143,73 @@
         document.addEventListener('DOMContentLoaded', function() {
     // Fetch jabatan data
     fetch('{{ route('get-jabatan') }}')
-        .then(response => response.json())
-        .then(data => {
-            const permissionsContainer = document.getElementById('permissions-container');
-            permissionsContainer.innerHTML = ''; // Reset options
+    .then(response => response.json())
+    .then(data => {
+        const permissionsContainer = document.getElementById('permissions-container');
+        permissionsContainer.innerHTML = ''; // Reset options
 
-            data.forEach(jabatan => {
-                const checkboxContainer = document.createElement('div');
-                checkboxContainer.classList.add('form-check');
+        data.forEach(jabatan => {
+            const checkboxContainer = document.createElement('div');
+            checkboxContainer.classList.add('form-check');
 
-                const checkbox = document.createElement('input');
-                checkbox.classList.add('form-check-input');
-                checkbox.type = 'checkbox';
-                checkbox.name = 'permissions[]';
-                checkbox.value = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
-                checkbox.id = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+            const checkbox = document.createElement('input');
+            checkbox.classList.add('form-check-input');
+            checkbox.type = 'checkbox';
+            checkbox.name = 'permissions[]';
+            checkbox.value = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+            checkbox.id = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
 
-                const label = document.createElement('label');
-                label.classList.add('form-check-label');
-                label.htmlFor = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
-                label.textContent = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+            const label = document.createElement('label');
+            label.classList.add('form-check-label');
+            label.htmlFor = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+            label.textContent = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
 
-                checkboxContainer.appendChild(checkbox);
-                checkboxContainer.appendChild(label);
-                permissionsContainer.appendChild(checkboxContainer);
-            });
-
-            // Add event listeners after checkboxes are added
-            addCheckboxEventListeners();
-        })
-        .catch(error => {
-            console.error('Error fetching jabatan:', error);
+            checkboxContainer.appendChild(checkbox);
+            checkboxContainer.appendChild(label);
+            permissionsContainer.appendChild(checkboxContainer);
         });
 
-    function addCheckboxEventListeners() {
-        const allCheckbox = document.getElementById('allCheckbox');
-        const checkboxes = document.querySelectorAll('input.form-check-input:not(#allCheckbox)');
+        // Add event listeners after checkboxes are added
+        addCheckboxEventListeners();
+    })
+    .catch(error => {
+        console.error('Error fetching jabatan:', error);
+    });
+    });
 
-        allCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = false;
-                    checkbox.style.display = 'none';
-                });
+function addCheckboxEventListeners() {
+    const checkboxes = document.querySelectorAll('input.form-check-input');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const allCheckbox = document.querySelector('input.form-check-input[value="All"]');
+
+            if (this.value === 'All') {
+                if (this.checked) {
+                    checkboxes.forEach(cb => {
+                        if (cb.value !== 'All') {
+                            cb.checked = false;
+                            cb.parentElement.style.display = 'none';
+                        }
+                    });
+                } else {
+                    checkboxes.forEach(cb => {
+                        cb.parentElement.style.display = 'block';
+                    });
+                }
             } else {
-                checkboxes.forEach(checkbox => {
-                    checkbox.style.display = 'block';
+                if (this.checked) {
+                    allCheckbox.checked = false;
+                }
+                checkboxes.forEach(cb => {
+                    if (cb.value === 'All') {
+                        cb.parentElement.style.display = 'block';
+                    }
                 });
             }
         });
-
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    allCheckbox.checked = false;
-                    checkboxes.forEach(cb => cb.style.display = 'block');
-                }
-            });
-        });
-    }
-});
+    });
+}
 
     document.addEventListener('DOMContentLoaded', function() {
         fetch('{{ route('kategori-dokumen') }}')
