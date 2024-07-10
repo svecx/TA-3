@@ -10,7 +10,7 @@
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-dokumen-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Dokumen Saya</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('draft-dokumen') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Kategori</a>
             @if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
-            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen-view') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Deleted Dokumen</a>
+            <a class="nav-link" id="v-pills-messages-tab" href="{{ route('kategori-dokumen.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">Deleted Dokumen</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('jabatan.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Role</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('list-user') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List User</a>
             <a class="nav-link" id="v-pills-messages-tab" href="{{ route('validasi.index') }}" role="tab" aria-controls="v-pills-messages" aria-selected="false">List Validasi</a>
@@ -90,21 +90,16 @@
                             <input type="text" id="tags" name="tags" data-role="tagsinput" class="form-control" value="{{ $document->tags }}" placeholder="Add tags">
                         </div>
                     </div>
-
+        
                     <div class="form-label">
-                        <div>
-                            <label for="permissions">Izinkan siapa saja yang melihat:</label>
-                        </div>
-                        <div>
-                            @foreach(['all' => 'All', 'kajur' => 'Kajur', 'sekjur' => 'Sekjur', 'kaprodi' => 'Kaprodi', 'dosen' => 'Dosen', 'adm' => 'Adm', 'mahasiswa' => 'Mahasiswa'] as $key => $label)
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="{{ $key }}" name="permissions[]" value="{{ $key }}"
-                                        {{ in_array($key, explode(',', $document->view ?? '')) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="{{ $key }}">{{ $label }}</label>
-                                </div>
-                            @endforeach
+                        <label for="permissions">Izinkan siapa saja yang melihat:</label>
+                        <div class="row row-cols-3">
+                            <div class="col-md-8" id="permissions-container">
+                                <!-- Kontainer untuk checkbox lainnya -->
+                            </div>
                         </div>
                     </div>
+
 
                     <button type="submit" class="btn btn-primary" style="margin-left:200px">Update</button>
                     <button href="{{ route('list-dokumen') }}" class="btn btn-secondary" style="margin-left:10px">Cancel</button>
@@ -113,4 +108,129 @@
         </div>
     </div>
 </div>
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+        fetch('{{ route('kategori-dokumen') }}')
+            .then(response => response.json())
+            .then(data => {
+                const kategoriDokumenSelect = document.getElementById('kategoriDokumen');
+                kategoriDokumenSelect.innerHTML = '<option value="">Pilih Kategori Dokumen</option>'; // Reset options
+
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.nama_dokumen;
+                    option.textContent = item.nama_dokumen;
+                    kategoriDokumenSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching kategori dokumen:', error);
+                const kategoriDokumenSelect = document.getElementById('kategoriDokumen');
+                kategoriDokumenSelect.innerHTML = '<option value="">Error memuat data</option>';
+            });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('{{ route('get-validasi-dokumen') }}') // Ganti dengan endpoint yang sesuai untuk mendapatkan data validasi dokumen
+            .then(response => response.json())
+            .then(data => {
+                const validasiDokumenSelect = document.getElementById('validasiDokumen');
+                validasiDokumenSelect.innerHTML = '<option value="">Pilih Validasi Dokumen</option>'; // Reset options
+
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item; // Sesuaikan dengan field yang sesuai dari JSON response
+                    option.textContent = item; // Sesuaikan dengan field yang sesuai dari JSON response
+                    validasiDokumenSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching validasi dokumen:', error);
+                const validasiDokumenSelect = document.getElementById('validasiDokumen');
+                validasiDokumenSelect.innerHTML = '<option value="">Error memuat data</option>';
+            });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch jabatan data
+        fetch('{{ route('get-jabatan') }}')
+            .then(response => response.json())
+            .then(data => {
+                const permissionsContainer = document.getElementById('permissions-container');
+                permissionsContainer.innerHTML = ''; // Reset options
+
+                // Convert $document->view to a JavaScript array
+                let selectedPermissions = [];
+                @if(isset($document->view))
+                    selectedPermissions = {!! json_encode(explode(',', $document->view)) !!};
+                @endif
+
+                data.forEach(jabatan => {
+                    const checkboxContainer = document.createElement('div');
+                    checkboxContainer.classList.add('form-check');
+
+                    const checkbox = document.createElement('input');
+                    checkbox.classList.add('form-check-input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'permissions[]';
+                    checkbox.value = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                    checkbox.id = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+
+                    // Check if the current checkbox value is in the selectedPermissions array
+                    if (selectedPermissions.includes(jabatan.nama_jabatan)) {
+                        checkbox.checked = true;
+                    }
+
+                    const label = document.createElement('label');
+                    label.classList.add('form-check-label');
+                    label.htmlFor = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+                    label.textContent = jabatan.nama_jabatan; // Sesuaikan dengan field yang sesuai dari JSON response
+
+                    checkboxContainer.appendChild(checkbox);
+                    checkboxContainer.appendChild(label);
+                    permissionsContainer.appendChild(checkboxContainer);
+                });
+
+                // Add event listeners after checkboxes are added
+                addCheckboxEventListeners();
+            })
+            .catch(error => {
+                console.error('Error fetching jabatan:', error);
+            });
+    });
+
+    function addCheckboxEventListeners() {
+        const checkboxes = document.querySelectorAll('input.form-check-input');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allCheckbox = document.querySelector('input.form-check-input[value="All"]');
+
+                if (this.value === 'All') {
+                    if (this.checked) {
+                        checkboxes.forEach(cb => {
+                            if (cb.value !== 'All') {
+                                cb.checked = false;
+                                cb.parentElement.style.display = 'none';
+                            }
+                        });
+                    } else {
+                        checkboxes.forEach(cb => {
+                            cb.parentElement.style.display = 'block';
+                        });
+                    }
+                } else {
+                    if (this.checked) {
+                        allCheckbox.checked = false;
+                    }
+                    checkboxes.forEach(cb => {
+                        if (cb.value === 'All') {
+                            cb.parentElement.style.display = 'block';
+                        }
+                    });
+                }
+            });
+        });
+    }
+</script>
 @endsection

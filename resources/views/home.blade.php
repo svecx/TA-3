@@ -48,34 +48,34 @@
 
 <!-- Modal for Unapproved Users -->
 @if(auth()->check() && auth()->user()->approved && (auth()->user()->jabatan === 'Admin' || auth()->user()->jabatan === 'Kaprodi'))
-                    <div class="modal fade" id="unapprovedUsersModal" tabindex="-1" aria-labelledby="unapprovedUsersModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="unapprovedUsersModalLabel">Pengguna Belum Disetujui</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Nama</th>
-                                                <th>Jabatan</th>
-                                                <th>Pesan</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="unapprovedUsersTableBody">
-                                            <!-- Data pengguna belum di-approve akan ditampilkan di sini -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+    <div class="modal fade" id="unapprovedUsersModal" tabindex="-1" aria-labelledby="unapprovedUsersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="unapprovedUsersModalLabel">Pengguna Belum Disetujui</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Jabatan</th>
+                                <th>Pesan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unapprovedUsersTableBody">
+                            <!-- Data pengguna belum di-approve akan ditampilkan di sini -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 <!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -107,37 +107,57 @@
         }
     });
 
-    // Memunculkan modal saat halaman dimuat jika pengguna belum disetujui
-  $(document).ready(function() {
-    fetch('{{ route('get-unapproved-users') }}')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.length > 0) {
-                const tableBody = document.getElementById('unapprovedUsersTableBody');
-                tableBody.innerHTML = '';
+    document.addEventListener('DOMContentLoaded', function() {
+            fetch('{{ route('unapproved-users') }}')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Untuk debugging, pastikan data diterima dengan benar
 
-                data.forEach(user => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${user.name}</td>
-                        <td>${user.jabatan}</td>
-                        <td>Mohon untuk approval user</td>
-                    `;
-                    tableBody.appendChild(row);
+                    const unapprovedUsersTableBody = document.getElementById('unapprovedUsersTableBody');
+                    unapprovedUsersTableBody.innerHTML = ''; // Clear existing rows
+
+                    data.forEach(user => {
+                        let shouldDisplay = true;
+
+                        // Kondisi untuk Kaprodi: hanya tampilkan Mahasiswa
+                        @if(auth()->user()->jabatan === 'Kaprodi')
+                            if (user.jabatan !== 'Mahasiswa') {
+                                shouldDisplay = false; // Skip users who are not "Mahasiswa"
+                            }
+                        @endif
+
+                        // Kondisi untuk Admin: tampilkan semua
+                        @if(auth()->user()->jabatan === 'Admin')
+                            // No additional conditions needed for Admin
+                        @endif
+
+                        if (shouldDisplay) {
+                            const row = document.createElement('tr');
+                            const nameCell = document.createElement('td');
+                            nameCell.textContent = user.name;
+                            const jabatanCell = document.createElement('td');
+                            jabatanCell.textContent = user.jabatan;
+                            const messageCell = document.createElement('td');
+                            messageCell.textContent = "Mohon untuk approval user";
+
+                            row.appendChild(nameCell);
+                            row.appendChild(jabatanCell);
+                            row.appendChild(messageCell);
+                            unapprovedUsersTableBody.appendChild(row);
+                        }
+                    });
+
+                    // Show the modal automatically if there are unapproved users
+                    if (data.length > 0) {
+                        $('#unapprovedUsersModal').modal('show');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching unapproved users:', error);
                 });
-
-                $('#unapprovedUsersModal').modal('show'); // Memunculkan modal
-            }
-        })
-        .catch(error => console.error('Error fetching unapproved users:', error.message));
-});
-
-</script>
+        });
+    </script>
+@endif
 
 <style>
     .welcome-text {

@@ -84,6 +84,7 @@ class DokumenController extends Controller
     public function edit($id)
     {
         $document = Dokumen::findOrFail($id);
+        // dd($document);
         return view('edit', compact('document'));
     }
 

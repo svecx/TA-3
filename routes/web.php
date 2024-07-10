@@ -86,6 +86,7 @@ Route::delete('/dokumens/{id}/draft', [DraftDocumentController::class, 'moveToDr
 Route::get('/draft-dokumen', [DraftDocumentController::class, 'index'])->name('draft-dokumen');
 Route::put('/approve-all', [CreateUser::class, 'approveAll'])->name('approve-all');
 Route::put('/cancel-all', [CreateUser::class, 'cancelAll'])->name('cancel-all');
+Route::get('/get-kategori-dokumen', [KategoriDokumenController::class, 'getKategoriDokumen'])->name('get-kategori-dokumen');
 Route::get('/kategori-dokumen', [KategoriDokumenController::class, 'getKategoriDokumen'])->name('kategori-dokumen');
 Route::get('/kategori-dokumen-view', [KategoriDokumenController::class, 'index'])->name('kategori-dokumen.index');
 Route::post('/kategori-dokumen-view', [KategoriDokumenController::class, 'store'])->name('kategori-dokumen.store');
@@ -98,7 +99,6 @@ Route::post('/jabatan-view', [JabatanController::class, 'store'])->name('jabatan
 Route::get('/jabatan-view/{id}/edit', [JabatanController::class, 'edit'])->name('jabatan.edit');
 Route::put('/jabatan-view/{id}', [JabatanController::class, 'update'])->name('jabatan.update');
 Route::delete('/jabatan-view/{id}', [JabatanController::class, 'destroy'])->name('jabatan.destroy');
-Route::get('/get-unapproved-users', [UserController::class, 'getUnapprovedUsers'])->name('get-unapproved-users');
 Route::get('/input-dokumen', [JabatanController::class, 'create'])->name('input-dokumen');
 Route::get('/validasi', [ValidasiController::class, 'index'])->name('validasi.index');
 Route::get('/validasi/create', [ValidasiController::class, 'create'])->name('validasi.create');
@@ -117,4 +117,5 @@ Route::put('/validasi-view/{id}', [ValidasiController::class, 'update'])->name('
 Route::delete('/validasi-view/{id}', [ValidasiController::class, 'destroy'])->name('validasi.destroy');
 Route::get('/validasi-dokumen', [ValidasiController::class, 'getValidasiDokumen'])->name('validasi.getValidasiDokumen');
 
-Route::get('/list-user', [DokumenController::class, 'listUser'])->name('list-user');
+// Route::get('/list-user', [DokumenController::class, 'listUser'])->name('list-user');
+Route::get('/unapproved-users', [UserController::class, 'getUnapprovedUsers'])->name('unapproved-users');
