@@ -62,6 +62,7 @@ Route::post('simpan-link', [LinkController::class, 'store'])->name('simpan-link'
 Route::post('list-dokumen/process', [DokumenController::class, 'processList'])->name('list-dokumen.process');
 Route::get('/kategori-dokumen', [DokumenController::class, 'kategori'])->name('kategori-dokumen');
 Route::get('/dokumen/{id}/edit', [DokumenController::class, 'edit'])->name('dokumen.edit');
+Route::get('/dokumen-link/{id}/edit', [DokumenlinkController::class, 'edit'])->name('dokumen-link.edit');
 Route::put('/dokumen/{id}', [DokumenController::class, 'update'])->name('dokumen.update');
 Route::get('/search-dokumen', [DokumenController::class, 'search'])->name('search-dokumen');
 Route::post('/dokumen/{id}/move-to-draft', [DokumenController::class, 'moveToDraft'])->name('dokumen.moveToDraft');

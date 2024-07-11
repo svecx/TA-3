@@ -108,54 +108,58 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-            fetch('{{ route('unapproved-users') }}')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); // Untuk debugging, pastikan data diterima dengan benar
+    fetch('{{ route('unapproved-users') }}')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Untuk debugging, pastikan data diterima dengan benar
 
-                    const unapprovedUsersTableBody = document.getElementById('unapprovedUsersTableBody');
-                    unapprovedUsersTableBody.innerHTML = ''; // Clear existing rows
+            const unapprovedUsersTableBody = document.getElementById('unapprovedUsersTableBody');
+            unapprovedUsersTableBody.innerHTML = ''; // Clear existing rows
 
-                    data.forEach(user => {
-                        let shouldDisplay = true;
+            let hasUnapprovedUsers = false;
 
-                        // Kondisi untuk Kaprodi: hanya tampilkan Mahasiswa
-                        @if(auth()->user()->jabatan === 'Kaprodi')
-                            if (user.jabatan !== 'Mahasiswa') {
-                                shouldDisplay = false; // Skip users who are not "Mahasiswa"
-                            }
-                        @endif
+            data.forEach(user => {
+                let shouldDisplay = true;
 
-                        // Kondisi untuk Admin: tampilkan semua
-                        @if(auth()->user()->jabatan === 'Admin')
-                            // No additional conditions needed for Admin
-                        @endif
-
-                        if (shouldDisplay) {
-                            const row = document.createElement('tr');
-                            const nameCell = document.createElement('td');
-                            nameCell.textContent = user.name;
-                            const jabatanCell = document.createElement('td');
-                            jabatanCell.textContent = user.jabatan;
-                            const messageCell = document.createElement('td');
-                            messageCell.textContent = "Mohon untuk approval user";
-
-                            row.appendChild(nameCell);
-                            row.appendChild(jabatanCell);
-                            row.appendChild(messageCell);
-                            unapprovedUsersTableBody.appendChild(row);
-                        }
-                    });
-
-                    // Show the modal automatically if there are unapproved users
-                    if (data.length > 0) {
-                        $('#unapprovedUsersModal').modal('show');
+                // Kondisi untuk Kaprodi: hanya tampilkan Mahasiswa
+                @if(auth()->user()->jabatan === 'Kaprodi')
+                    if (user.jabatan !== 'Mahasiswa') {
+                        shouldDisplay = false; // Skip users who are not "Mahasiswa"
                     }
-                })
-                .catch(error => {
-                    console.error('Error fetching unapproved users:', error);
-                });
+                @endif
+
+                // Kondisi untuk Admin: tampilkan semua
+                @if(auth()->user()->jabatan === 'Admin')
+                    // No additional conditions needed for Admin
+                @endif
+
+                if (shouldDisplay) {
+                    hasUnapprovedUsers = true;
+                    const row = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = user.name;
+                    const jabatanCell = document.createElement('td');
+                    jabatanCell.textContent = user.jabatan;
+                    const messageCell = document.createElement('td');
+                    messageCell.textContent = "Mohon untuk approval user";
+
+                    row.appendChild(nameCell);
+                    row.appendChild(jabatanCell);
+                    row.appendChild(messageCell);
+                    unapprovedUsersTableBody.appendChild(row);
+                }
+            });
+
+            // Show the modal automatically if there are unapproved users
+            if (hasUnapprovedUsers) {
+                $('#unapprovedUsersModal').modal('show');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching unapproved users:', error);
         });
+});
+
     </script>
 @endif
 
