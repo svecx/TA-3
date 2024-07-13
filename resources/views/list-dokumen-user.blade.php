@@ -122,7 +122,7 @@
                             <a href="{{ route('dokumen.history', $document->id) }}" class="btn btn-link p-0" style="display: inline-block;margin-right: 0.3rem">
                                 <i class="fa fa-history" aria-hidden="true" style="color: blue;"></i>
                             </a>
-                            <a href="{{ route('dokumen.edit', $document->id) }}" class="btn btn-link p-0" style="display: inline-block; margin-right: 0.3rem">
+                            <a href="{{ route('dokumen-link.edit', $document->id) }}" class="btn btn-link p-0" style="display: inline-block; margin-right: 0.3rem">
                                 <i class="fa fa-edit" aria-hidden="true" style="color: blue;"></i>
                             </a>
                             <form action="{{ route('dokumen.moveToDraft', $document->id) }}" method="POST" style="display: inline-block; margin: 0; padding: 0;">

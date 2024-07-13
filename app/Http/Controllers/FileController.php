@@ -217,7 +217,7 @@ class FileController extends Controller
     public function history($id)
     {
         $dokumen = Dokumen::findOrFail($id);
-        $histories = $dokumen->histories()->orderBy('created_at', 'desc')->get(['id', 'judul_dokumen', 'deskripsi_dokumen', 'kategori_dokumen', 'validasi_dokumen', 'tahun_dokumen', 'dokumen_file', 'tags', 'created_by', 'created_at','view',]);
+    $histories = $dokumen->histories()->orderBy('created_at', 'desc')->get(['id','judul_dokumen', 'deskripsi_dokumen', 'kategori_dokumen', 'validasi_dokumen','status_file', 'tahun_dokumen','dokumen_link', 'dokumen_file', 'tags', 'created_by','view']);
 
         return view('history', compact('dokumen', 'histories'));
     }

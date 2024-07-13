@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\DokumenLinkController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\DokumenUserController;
@@ -62,7 +63,10 @@ Route::post('simpan-link', [LinkController::class, 'store'])->name('simpan-link'
 Route::post('list-dokumen/process', [DokumenController::class, 'processList'])->name('list-dokumen.process');
 Route::get('/kategori-dokumen', [DokumenController::class, 'kategori'])->name('kategori-dokumen');
 Route::get('/dokumen/{id}/edit', [DokumenController::class, 'edit'])->name('dokumen.edit');
-Route::get('/dokumen-link/{id}/edit', [DokumenlinkController::class, 'edit'])->name('dokumen-link.edit');
+
+Route::get('/dokumen-link/{id}/edit', [DokumenLinkController::class, 'edit'])->name('dokumen-link.edit');
+Route::put('/dokumen-link/{id}', [DokumenLinkController::class, 'update'])->name('dokumen-link.update');
+
 Route::put('/dokumen/{id}', [DokumenController::class, 'update'])->name('dokumen.update');
 Route::get('/search-dokumen', [DokumenController::class, 'search'])->name('search-dokumen');
 Route::post('/dokumen/{id}/move-to-draft', [DokumenController::class, 'moveToDraft'])->name('dokumen.moveToDraft');

@@ -89,68 +89,76 @@ class DokumenController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $document = Dokumen::findOrFail($id);
-    
-        History::create([
-            'dokumen_id' => $document->id,
-            'judul_dokumen' => $document->judul_dokumen,
-            'deskripsi_dokumen' => $document->deskripsi_dokumen,
-            'kategori_dokumen' => $document->kategori_dokumen,
-            'validasi_dokumen' => $document->validasi_dokumen,
-            'tahun_dokumen' => $document->tahun_dokumen,
-            'dokumen_file' => $document->dokumen_file,
-            'tags' => $document->tags,
-            'created_by' =>$document->created_by,
-            'view' => $document->view,
-        ]);
-    
-        $validatedData = $request->validate([
-            'judul_dokumen' => 'required|string|max:255',
-            'deskripsi_dokumen' => 'required|string',
-            'kategori_dokumen' => 'required|string',
-            'validasi_dokumen' => 'required|string',
-            'tahun_dokumen' => 'required|integer',
-            'edit_dokumen_file' => 'nullable|file|mimes:pdf,docx,jpeg,png,jpg|max:2048',
-            'tags' => 'nullable|string',
-            'created_by' => 'nullable|string',
-            'view' => 'array',
-        ]);
-        // Handle file yang diunggah
-        if ($request->hasFile('edit_dokumen_file')) {
-            $fileName = str_replace(' ', '_', $request->edit_dokumen_file->getClientOriginalName());
+{
+    $document = Dokumen::findOrFail($id);
 
-            // Simpan file lama ke dalam history
-            Storage::disk('public')->copy('documents/' . $document->dokumen_file, 'documents/history/' . $document->dokumen_file);
+    // Menyimpan data lama ke tabel history
+    History::create([
+        'dokumen_id' => $document->id,
+        'judul_dokumen' => $document->judul_dokumen,
+        'deskripsi_dokumen' => $document->deskripsi_dokumen,
+        'kategori_dokumen' => $document->kategori_dokumen,
+        'validasi_dokumen' => $document->validasi_dokumen,
+        'status_file' => $document->status_file ?? 0,
+        'tahun_dokumen' => $document->tahun_dokumen,
+        'dokumen_file' => $document->dokumen_file,
+        'dokumen_link' => $document->dokumen_link,
+        'tags' => $document->tags,
+        'created_by' => $document->created_by,
+        'view' => $document->view,
+    ]);
 
-            // Simpan file baru
-            $path = $request->edit_dokumen_file->storeAs('public/documents', $fileName);
-            $document->dokumen_file = $fileName;
-        }
+    $validatedData = $request->validate([
+        'judul_dokumen' => 'required|string|max:255',
+        'deskripsi_dokumen' => 'required|string',
+        'kategori_dokumen' => 'required|string',
+        'validasi_dokumen' => 'required|string',
+        'tahun_dokumen' => 'required|integer',
+        'edit_dokumen_file' => 'nullable|file|mimes:pdf,docx,jpeg,png,jpg|max:2048',
+        'tags' => 'nullable|string',
+        'created_by' => 'nullable|string',
+        'view' => 'array',
+    ]);
 
-         // Menggabungkan nilai checkbox menjadi string terpisah koma
-         $viewPermissions = implode(',', $request->permissions ?? []);
-         $document->view = $viewPermissions;
+    // Handle file yang diunggah
+    if ($request->hasFile('edit_dokumen_file')) {
+        $fileName = str_replace(' ', '_', $request->edit_dokumen_file->getClientOriginalName());
 
-        $user = Auth::user();
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
-        }
-    
-        $document->judul_dokumen = $validatedData['judul_dokumen'];
-        $document->deskripsi_dokumen = $validatedData['deskripsi_dokumen'];
-        $document->kategori_dokumen = $validatedData['kategori_dokumen'];
-        $document->validasi_dokumen = $validatedData['validasi_dokumen'];
-        $document->tahun_dokumen = $validatedData['tahun_dokumen'];
-        $document->tags = $validatedData['tags'] ?? null;
-        $document->created_by = $validatedData['created_by'] ?? $user->name;
+        // Simpan file lama ke dalam history
+        Storage::disk('public')->copy('documents/' . $document->dokumen_file, 'documents/history/' . $document->dokumen_file);
 
-        $document->save();
-    
-        Log::info('Document after update', ['document' => $document]);
-
-        return redirect()->route('list-dokumen')->with('success', 'Details dokumen berhasil diperbarui.');
+        // Simpan file baru
+        $path = $request->edit_dokumen_file->storeAs('public/documents', $fileName);
+        $document->dokumen_file = $fileName;
     }
+
+    // Menggabungkan nilai checkbox menjadi string terpisah koma
+    $viewPermissions = implode(',', $request->permissions ?? []);
+    $document->view = $viewPermissions;
+
+    $user = Auth::user();
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+    }
+
+    $document->judul_dokumen = $validatedData['judul_dokumen'];
+    $document->deskripsi_dokumen = $validatedData['deskripsi_dokumen'];
+    $document->kategori_dokumen = $validatedData['kategori_dokumen'];
+    $document->validasi_dokumen = $validatedData['validasi_dokumen'];
+    $document->tahun_dokumen = $validatedData['tahun_dokumen'];
+    $document->tags = $validatedData['tags'] ?? null;
+    $document->created_by = $validatedData['created_by'] ?? $user->name;
+
+    // Update nilai status_file menjadi 1
+    $document->status_file = 0;
+
+    $document->save();
+
+    Log::info('Document after update', ['document' => $document]);
+
+    return redirect()->route('list-dokumen')->with('success', 'Details dokumen berhasil diperbarui.');
+}
+
 
     public function moveToDraft($id)
     {
@@ -195,7 +203,7 @@ class DokumenController extends Controller
     public function history($id)
 {
     $dokumen = Dokumen::findOrFail($id);
-    $histories = $dokumen->histories()->orderBy('created_at', 'desc')->get(['id','created_by', 'judul_dokumen', 'deskripsi_dokumen', 'kategori_dokumen', 'validasi_dokumen', 'tahun_dokumen', 'dokumen_file', 'tags', 'created_at', 'view']);
+    $histories = $dokumen->histories()->orderBy('created_at', 'desc')->get(['id','created_by','judul_dokumen', 'deskripsi_dokumen', 'kategori_dokumen', 'validasi_dokumen','status_file', 'tahun_dokumen','dokumen_link', 'dokumen_file', 'tags', 'created_by','view']);
 
     return view('history', compact('dokumen', 'histories'));
 }

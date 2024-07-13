@@ -56,11 +56,20 @@
                                             <td>{{ $history->kategori_dokumen }}</td>
                                             <td>{{ $history->validasi_dokumen }}</td>
                                             <td>{{ $history->tahun_dokumen }}</td>
-                                            <td>
-                                                <a href="{{ asset('storage/documents/' . $history->dokumen_file) }}" target="_blank">
-                                                    <i class="fa fa-file"></i>
-                                                </a>
-                                            </td>
+                                            @if ($history->status_file === 0)
+    <td>
+        <a href="{{ asset('storage/documents/' . $history->dokumen_file) }}" target="_blank">
+            <i class="fa fa-file"></i>
+        </a>
+    </td>
+@elseif ($history->status_file === 1)
+    <td>
+        <a href="{{ $history->dokumen_link }}" target="_blank">
+            <i class="fa fa-link"></i>
+        </a>
+    </td>
+@endif
+
                                             <td>{{ $history->tags }}</td>
                                             <td>{{ \Carbon\Carbon::parse($history->created_at)->setTimezone('Asia/Jakarta')->format('Y-m-d H:i:s') }}</td>
                                             <td>{{ $history->created_by }}</td>

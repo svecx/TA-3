@@ -41,33 +41,16 @@
                         <input class="form-control" name="deskripsi_dokumen" value="{{ $document->deskripsi_dokumen }}" style="margin-left:200px">
                     </div>
                     <div style="margin-left:200px; margin-top:10px">
-                        <label>Kategori Dokumen:</label>
-                        <select name="kategori_dokumen" class="form-control" required>
-                            <option value="Dokumen Visi Misi" {{ $document->kategori_dokumen == 'Dokumen Visi Misi' ? 'selected' : '' }}>Dokumen Visi Misi</option>
-                            <option value="Dokumen Tujuan" {{ $document->kategori_dokumen == 'Dokumen Tujuan' ? 'selected' : '' }}>Dokumen Tujuan</option>
-                            <option value="Dokumen Strategi" {{ $document->kategori_dokumen == 'Dokumen Strategi' ? 'selected' : '' }}>Dokumen Strategi</option>
-                            <option value="Dokumen Tata Pamong" {{ $document->kategori_dokumen == 'Dokumen Tata Pamong' ? 'selected' : '' }}>Dokumen Tata Pamong</option>
-                            <option value="Dokumen Tata Kelola" {{ $document->kategori_dokumen == 'Dokumen Tata Kelola' ? 'selected' : '' }}>Dokumen Tata Kelola</option>
-                            <option value="Dokumen Kerjasama" {{ $document->kategori_dokumen == 'Dokumen Kerjasama' ? 'selected' : '' }}>Dokumen Kerjasama</option>
-                            <option value="Dokumen Mahasiswa" {{ $document->kategori_dokumen == 'Dokumen Mahasiswa' ? 'selected' : '' }}>Dokumen Mahasiswa</option>
-                            <option value="Dokumen Sumber Daya Manusia" {{ $document->kategori_dokumen == 'Dokumen Sumber Daya Manusia' ? 'selected' : '' }}>Dokumen Sumber Daya Manusia</option>
-                            <option value="Dokumen Keuangan" {{ $document->kategori_dokumen == 'Dokumen Keuangan' ? 'selected' : '' }}>Dokumen Keuangan</option>
-                            <option value="Dokumen Sarana Prasarana" {{ $document->kategori_dokumen == 'Dokumen Sarana Prasarana' ? 'selected' : '' }}>Dokumen Sarana Prasarana</option>
-                            <option value="Dokumen Pendidikan" {{ $document->kategori_dokumen == 'Dokumen Pendidikan' ? 'selected' : '' }}>Dokumen Pendidikan</option>
-                            <option value="Dokumen Penelitian" {{ $document->kategori_dokumen == 'Dokumen Penelitian' ? 'selected' : '' }}>Dokumen Penelitian</option>
-                            <option value="Dokumen Pengabdian Kepada Masyarakat" {{ $document->kategori_dokumen == 'Dokumen Pengabdian Kepada Masyarakat' ? 'selected' : '' }}>Dokumen Pengabdian Kepada Masyarakat</option>
-                            <option value="Dokumen Iuran" {{ $document->kategori_dokumen == 'Dokumen Iuran' ? 'selected' : '' }}>Dokumen Iuran</option>
-                            <option value="Dokumen Capaian Tridarma" {{ $document->kategori_dokumen == 'Dokumen Capaian Tridarma' ? 'selected' : '' }}>Dokumen Capaian Tridarma</option>
-                        </select>
-                    </div>
+    <label>Kategori Dokumen:</label>
+    <select name="kategori_dokumen" id="kategoriDokumen" class="form-control" required>
+        <option value="">Memuat...</option>
+    </select>
+</div>
                     <!-- validasi dokumen -->
                     <div style="margin-left:200px; margin-top:10px">
                         <label>Validasi Dokumen:</label>
-                        <select name="validasi_dokumen" class="form-control" required>
-                            <option value="Direktur" {{ $document->validasi_dokumen == 'Direktur' ? 'selected' : '' }}>Direktur</option>
-                            <option value="Ketua Jurusan" {{ $document->validasi_dokumen == 'Ketua Jurusan' ? 'selected' : '' }}>Ketua Jurusan</option>
-                            <option value="Ketua Program Studi" {{ $document->validasi_dokumen == 'Ketua Program Studi' ? 'selected' : '' }}>Ketua Program Studi</option>
-                            <option value="Kelompok Bidang Keahlian" {{ $document->validasi_dokumen == 'Kelompok Bidang Keahlian' ? 'selected' : '' }}>Kelompok Bidang Keahlian</option>
+                        <select name="validasi_dokumen" id="validasiDokumen" class="form-control" required>
+                            <option value="">Memuat...</option>
                         </select>
                     </div>
                     <div>
@@ -102,6 +85,7 @@
 
 
                     <button type="submit" class="btn btn-primary" style="margin-left:200px">Update</button>
+                    <a href="{{ route('dokumen-link.edit', $document->id) }}" class="btn btn-primary" style="margin-left:10px">Update Into A Link</a>
                     <button href="{{ route('list-dokumen') }}" class="btn btn-secondary" style="margin-left:10px">Cancel</button>
                 </form>
             </div>
@@ -131,16 +115,23 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('{{ route('get-validasi-dokumen') }}') // Ganti dengan endpoint yang sesuai untuk mendapatkan data validasi dokumen
+        fetch('{{ route('get-validasi-dokumen') }}')
             .then(response => response.json())
             .then(data => {
                 const validasiDokumenSelect = document.getElementById('validasiDokumen');
                 validasiDokumenSelect.innerHTML = '<option value="">Pilih Validasi Dokumen</option>'; // Reset options
 
+                const currentValidasi = '{{ $document->validasi_dokumen }}';
+
                 data.forEach(item => {
                     const option = document.createElement('option');
-                    option.value = item; // Sesuaikan dengan field yang sesuai dari JSON response
-                    option.textContent = item; // Sesuaikan dengan field yang sesuai dari JSON response
+                    option.value = item;
+                    option.textContent = item;
+
+                    if (item === currentValidasi) {
+                        option.selected = true;
+                    }
+
                     validasiDokumenSelect.appendChild(option);
                 });
             })
@@ -232,5 +223,36 @@
             });
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+    fetch('{{ route('kategori-dokumen') }}')
+        .then(response => response.json())
+        .then(data => {
+            const kategoriDokumenSelect = document.getElementById('kategoriDokumen');
+            kategoriDokumenSelect.innerHTML = '<option value="">Pilih Kategori Dokumen</option>'; // Reset options
+
+            // Ambil nilai kategori dokumen dari document
+            const selectedKategoriDokumen = "{{ $document->kategori_dokumen }}";
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.nama_dokumen;
+                option.textContent = item.nama_dokumen;
+
+                // Tambahkan kondisi selected
+                if (item.nama_dokumen === selectedKategoriDokumen) {
+                    option.selected = true;
+                }
+
+                kategoriDokumenSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching kategori dokumen:', error);
+            const kategoriDokumenSelect = document.getElementById('kategoriDokumen');
+            kategoriDokumenSelect.innerHTML = '<option value="">Error memuat data</option>';
+        });
+});
+
 </script>
 @endsection
