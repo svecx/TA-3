@@ -26,24 +26,48 @@
             </div>
         </div>
    
-        <div class="mb-3 row">
-            <label for="jabatan" class="col-sm-2 col-form-label">Jabatan:</label>
-            <div class="col-sm-10">
-                <select name="jabatan" id="jabatan" class="form-control" required>
-                    <option value="Kajur" {{ $user->jabatan == 'Kajur' ? 'selected' : '' }}>Ketua Jurusan</option>
-                    <option value="Sekjur" {{ $user->jabatan == 'Sekjur' ? 'selected' : '' }}>Sekretaris Jurusan</option>
-                    <option value="Kaprodi" {{ $user->jabatan == 'Kaprodi' ? 'selected' : '' }}>Kaprodi</option>
-                    <option value="Dosen" {{ $user->jabatan == 'Dosen' ? 'selected' : '' }}>Dosen</option>
-                    <option value="Adm" {{ $user->jabatan == 'Adm' ? 'selected' : '' }}>Adm</option>
-                    <option value="Mahasiswa" {{ $user->jabatan == 'Mahasiswa' ? 'selected' : '' }}>Mahasiswa</option>
-                    <option value="Admin" {{ $user->jabatan == 'Admin' ? 'selected' : '' }}>Admin</option>
-                </select>
-            </div>
-        </div>
+        <div class="row mb-3">
+                        <label for="jabatan" class="col-sm-2 col-form-label">Role:</label>
+                        <div class="col-sm-10">
+                            <select name="jabatan" id="jabatanSelect" class="form-control" required>
+                                <option value="">Memuat...</option>
+                            </select>
+                        </div>
+                    </div>
+
         <div class="d-flex justify-content-between">
             <button type="submit" class="btn btn-primary me-2">Update</button>
             <a href="{{ route('list-user') }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('{{ route('get-jabatan') }}')
+        .then(response => response.json())
+        .then(data => {
+            const jabatanSelect = document.getElementById('jabatanSelect');
+            jabatanSelect.innerHTML = '<option value="" disabled>Pilih Role</option>'; // Reset options
+
+            const userJabatan = '{{ $user->jabatan }}'; // Ambil nilai jabatan dari $user
+
+            data.forEach(item => {
+                if (item.nama_jabatan !== 'All') { // Tambahkan kondisi di sini
+                    const option = document.createElement('option');
+                    option.value = item.nama_jabatan;
+                    option.textContent = item.nama_jabatan;
+                    if (item.nama_jabatan === userJabatan) {
+                        option.selected = true; // Tandai sebagai selected jika cocok
+                    }
+                    jabatanSelect.appendChild(option);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching jabatan:', error);
+            const jabatanSelect = document.getElementById('jabatanSelect');
+            jabatanSelect.innerHTML = '<option value="">Error memuat data</option>';
+        });
+});
+</script>
 @endsection
