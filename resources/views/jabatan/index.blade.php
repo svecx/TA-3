@@ -31,15 +31,16 @@
                     <table class="table table-striped table-bordered table-sm">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>No</th>
                                 <th>Nama Jabatan</th>
                                 <th style="width: 10.5rem;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                        @php $no = 1; @endphp
                             @foreach($jabatan as $item)
                                 <tr>
-                                    <td>{{ $item->id }}</td>
+                                    <td>{{ $no++ }}</td>
                                     <td>{{ $item->nama_jabatan }}</td>
                                     <td>
                                         <a href="{{ route('jabatan.edit', $item->id) }}" class="btn btn-warning">Edit</a>
